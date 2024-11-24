@@ -4,6 +4,7 @@ import { MdOutlineGroup } from "react-icons/md";
 import { boardStore } from "../store/TrelloStoreProvider";
 import { Skeleton } from "antd";
 import { IoTrashBinSharp } from "react-icons/io5";
+import { MdCancel } from "react-icons/md";
 
 const TrelloBoardCard = () => {
   const { boardList, addBoardFn, delBoardFn, skeletonLoad } =
@@ -41,15 +42,29 @@ const TrelloBoardCard = () => {
   };
 
   const content = (
-    <form id="boardForm" onSubmit={(e) => handleSubmit(e)} className="flex h-[100px] flex-col justify-around text-xl">
-      <input placeholder="enter the board name" ref={boardRef} required className="h-[40%] p-3 border rounded"/>
+    <form
+      id="boardForm"
+      onSubmit={(e) => handleSubmit(e)}
+      className="flex h-[150px] flex-col justify-around text-xl"
+    >
+      <input
+        placeholder="enter the board name"
+        ref={boardRef}
+        required
+        className="h-[30%] p-3 border rounded"
+      />
       <button
         type="submit"
-        className="bg-slate-500 hover:bg-slate-700 w-[30%] text-base rounded text-white h-[30%]"
+        className="bg-slate-500 hover:bg-slate-700 w-[30%] text-base rounded text-white h-[20%]"
       >
         Add
       </button>
 
+      <MdCancel
+        className="text-red-200 hover:text-red-300"
+        size={40}
+        onClick={() => setBoardPopOpen(!boardPopOpen)}
+      />
     </form>
   );
 
@@ -67,7 +82,7 @@ const TrelloBoardCard = () => {
           content={content}
           title="Add a board"
           open={boardPopOpen}
-          placement="rightBottom"
+          placement="bottomRight"
         >
           <Card
             hoverable
@@ -99,9 +114,12 @@ const TrelloBoardCard = () => {
               <MdOutlineGroup className="text-sm text-slate-100" />
 
               <Tooltip placement="top" title={`remove ${name}`}>
-              <Space className="absolute top-2 right-5">
-                <IoTrashBinSharp className="text-white text-xl hover:text-red-200" onClick={() => delBoardFn(id)} />
-              </Space>
+                <Space className="absolute top-2 right-5">
+                  <IoTrashBinSharp
+                    className="text-white text-xl hover:text-red-200"
+                    onClick={() => delBoardFn(id)}
+                  />
+                </Space>
               </Tooltip>
             </Card>
           ))}
