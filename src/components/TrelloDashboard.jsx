@@ -15,10 +15,9 @@ const TrelloDashboard = () => {
         </Flex>
 
         <Flex
-          direction="horizontal"
-          className="h-full  w-[70%] flex justify-center items-center flex-col"
+          className="h-full w-[70%] flex justify-center items-center flex-col "
         >
-          <Title className="text-left w-full my-3">Boards</Title>
+          <Title className="text-center w-full my-3  md:text-left">Boards</Title>
           <TrelloBoardCard />
         </Flex>
       </Content>

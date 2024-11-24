@@ -3,29 +3,10 @@ import {Layout} from "antd";
 import TrelloFooter from "../components/TrelloFooter";
 import TrelloDashboard from "../components/TrelloDashboard";
 import TrelloNavigation from "../components/TrelloNavigation";
+import TrelloStoreProvider from "../store/TrelloStoreProvider";
 
 function App() {
-  // useEffect(() => {
-  //   const fetchBoard = async() => {
-  //     try {
-  //       const data = await fetch(`https://api.trello.com/1/members/me/boards?key=${APIKey}&token=${APIToken}`, {
-  //         method: 'GET',
-  //         headers: {
-  //           'Accept': 'application/json'
-  //         }
-  //       })
-  //       const jsonData = await data.json();
-  //       console.log(jsonData.map(x => x.id))
-  //       const id = jsonData.map(x => x.id)[0];
-  //       fetchBoardId(id)
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-  //   }
-
-  //   fetchBoard();
-
-  // }, [])
+  
 
   // const fetchBoardId = async(idBoard) => {
   //   try {
@@ -44,11 +25,13 @@ function App() {
 
  
   return (
-    <Layout className="overflow-hidden w-[100%] max-w-[100%] h-screen">
+    <TrelloStoreProvider>
+      <Layout className="overflow-hidden w-[100%] max-w-[100%] h-screen">
       <TrelloNavigation />
       <TrelloDashboard />
       <TrelloFooter />
     </Layout>
+    </TrelloStoreProvider>
   );
 }
 
