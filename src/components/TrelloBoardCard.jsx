@@ -5,7 +5,8 @@ import { boardStore } from "../store/TrelloStoreProvider";
 import { Skeleton } from "antd";
 import { IoTrashBinSharp } from "react-icons/io5";
 import { MdCancel } from "react-icons/md";
-
+import { Link } from "react-router-dom";
+import { IoMdClose } from "react-icons/io";
 const TrelloBoardCard = () => {
   const { boardList, addBoardFn, delBoardFn, skeletonLoad } =
     useContext(boardStore);
@@ -68,6 +69,15 @@ const TrelloBoardCard = () => {
     </form>
   );
 
+  const stopCreatingBoard = (
+    <Space className="flex">
+        <span className="text-base">You are not allowed to add more baords</span>
+        <div className="h-[30px] w-[30px] flex justify-center items-center">
+        <IoMdClose className="text-slate-900 hover:text-xl hover:text-slate-500" onClick={() => setBoardPopOpen(!boardPopOpen)}/>
+        </div>
+    </Space>
+  )
+
   return (
     <Flex
       wrap
@@ -79,7 +89,7 @@ const TrelloBoardCard = () => {
         title={<span>{10 - boardList?.length} remaining</span>}
       >
         <Popover
-          content={content}
+          content={boardList?.length === 10 ? stopCreatingBoard : content}
           title="Add a board"
           open={boardPopOpen}
           placement="bottomRight"
@@ -104,6 +114,7 @@ const TrelloBoardCard = () => {
             />
           ))
         : boardList.map(({ name, id }) => (
+            <Link to={`/boards/${id}`}>
             <Card
               key={id}
               hoverable
@@ -113,15 +124,20 @@ const TrelloBoardCard = () => {
               <span className="text-lg w-[100%] text-white">{name}</span>
               <MdOutlineGroup className="text-sm text-slate-100" />
 
-              <Tooltip placement="top" title={`remove ${name}`}>
-                <Space className="absolute top-2 right-5">
+              <Tooltip placement="top" title={`remove "${name}"`}>
+                <Space className="absolute top-2 right-3">
                   <IoTrashBinSharp
                     className="text-white text-xl hover:text-red-200"
-                    onClick={() => delBoardFn(id)}
+                    onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation();
+                        delBoardFn(id)
+                    }}
                   />
                 </Space>
               </Tooltip>
             </Card>
+            </Link>
           ))}
     </Flex>
   );
