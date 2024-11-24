@@ -9,7 +9,7 @@ import TrelloBoardsPage from './components/TrelloBoardsPage.jsx';
 
 const router = createBrowserRouter([
   {
-    path: "/", element: <App />, children: [
+    path: "/", element: <App />, children: [ //change to boards url
       {path: "/", element: <TrelloDashboard />},
       {path: "/boards/:id", element: <TrelloBoardsPage />},
     ]
