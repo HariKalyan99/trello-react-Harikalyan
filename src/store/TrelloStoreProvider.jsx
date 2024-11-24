@@ -24,8 +24,8 @@ function pureBoardReducerFn(currentBoardList, action) {
     }
 }
 
-let APIKey = import.meta.env.VITE_APIKEY || "ca652b55afd977000ae85f7c682653d0";
-let APIToken = import.meta.env.VITE_APITOKEN || "ATTA723ca74960837bbd5eb3882413c89856b92811b7ac8fa0b0c9f5722064048b489C35BA35";
+let APIKey = "ca652b55afd977000ae85f7c682653d0";
+let APIToken = "ATTA723ca74960837bbd5eb3882413c89856b92811b7ac8fa0b0c9f5722064048b489C35BA35";
 
 const TrelloStoreProvider = ({ children }) => {
 //   const [boardList, setBoardList] = useState([]);
