@@ -21,7 +21,7 @@ const TrelloNavigation = ({ boardsPage }) => {
             placement="bottom"
             title="Back to dashboard"
           >
-          <Link to={"/boards"} style={linkStyle}>
+          <Link to={"/"} style={linkStyle}>
             <Space className="h-[2rem] w-[2rem] bg-slate-900 flex justify-center hover:bg-slate-600">
               <MdDashboard className="text-lg hover:text-xl cursor-pointer" />
             </Space>
