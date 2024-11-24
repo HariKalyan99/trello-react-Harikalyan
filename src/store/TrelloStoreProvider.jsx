@@ -4,7 +4,9 @@ import { createContext, useEffect, useReducer, useState } from "react";
 export const boardStore = createContext({
   boardList: [],
   addBoardFn: () => {},
-  delBoardFn: () => {}
+  delBoardFn: () => {},
+  skeletonLoad: true,
+  setSkeletonLoad: () => {}
 });
 
 function pureBoardReducerFn(currentBoardList, action) {
@@ -29,6 +31,7 @@ const TrelloStoreProvider = ({ children }) => {
 //   const [boardList, setBoardList] = useState([]);
   const [boardName, setBoardName] = useState("");
   const [deleteBoard, setDeleteBoard] = useState("");
+  const [skeletonLoad, setSkeletonLoad] = useState(false);
 
 
   const [boardList, dispatchBoardReducerFn] = useReducer(pureBoardReducerFn, [])
@@ -38,6 +41,7 @@ const TrelloStoreProvider = ({ children }) => {
     const { signal } = controller;
     const fetchBoards = async () => {
       try {
+        setSkeletonLoad(true)
         const { data } = await axios(
           `https://api.trello.com/1/members/me/boards?key=${APIKey}&token=${APIToken}`,
           {
@@ -46,6 +50,7 @@ const TrelloStoreProvider = ({ children }) => {
         );
         if (data) {
             //   setBoardList(data);
+            setSkeletonLoad(false)
             dispatchBoardReducerFn({
                 type: "INITIAL_BOARDLIST",
                 payload: {
@@ -124,7 +129,7 @@ const TrelloStoreProvider = ({ children }) => {
   }
 
   return (
-    <boardStore.Provider value={{ boardList, addBoardFn, delBoardFn }}>
+    <boardStore.Provider value={{ boardList, addBoardFn, delBoardFn, skeletonLoad }}>
       {children}
     </boardStore.Provider>
   );
