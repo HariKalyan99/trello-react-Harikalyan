@@ -114,9 +114,8 @@ const TrelloBoardCard = () => {
             />
           ))
         : boardList.map(({ name, id }) => (
-            <Link to={`/boards/${id}`}>
+            <Link to={`/boards/${id}`} key={id}>
             <Card
-              key={id}
               hoverable
               style={cardBack}
               className="h-[90px] w-[250px] flex justify-between items-start bg-slate-500 flex-col relative"
