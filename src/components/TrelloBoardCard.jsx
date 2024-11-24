@@ -8,10 +8,6 @@ import { IoTrashBinSharp } from "react-icons/io5";
 const TrelloBoardCard = () => {
   const { boardList, addBoardFn, delBoardFn, skeletonLoad } =
     useContext(boardStore);
-
-  const [open, setOpen] = React.useState(false);
-  const [loading, setLoading] = React.useState(true);
-
   const [boardPopOpen, setBoardPopOpen] = useState(false);
 
   const boardRef = useRef("");
@@ -21,13 +17,6 @@ const TrelloBoardCard = () => {
     setBoardPopOpen(false);
     addBoardFn(boardRef.current.value);
     boardRef.current.value = "";
-  };
-  const showLoading = () => {
-    setOpen(true);
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
   };
 
   //     const [arrow, setArrow] = useState('Show');
@@ -105,15 +94,15 @@ const TrelloBoardCard = () => {
               hoverable
               style={cardBack}
               className="h-[90px] w-[250px] flex justify-between items-start bg-slate-500 flex-col relative"
-              //   onClick={() => delBoardFn(id)}
             >
               <span className="text-lg w-[100%] text-white">{name}</span>
               <MdOutlineGroup className="text-sm text-slate-100" />
 
+              <Tooltip placement="top" title={`remove ${name}`}>
               <Space className="absolute top-2 right-5">
                 <IoTrashBinSharp className="text-white text-xl hover:text-red-200" onClick={() => delBoardFn(id)} />
-                
               </Space>
+              </Tooltip>
             </Card>
           ))}
     </Flex>
