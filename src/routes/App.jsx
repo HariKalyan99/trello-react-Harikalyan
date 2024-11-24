@@ -8,7 +8,7 @@ import { Outlet } from "react-router-dom";
 function App() {
   return (
     <TrelloStoreProvider>
-      <Layout className="overflow-hidden w-[100%] max-w-[100%] h-screen">
+      <Layout className="overflow-hidden w-[100%] max-w-[100%] h-screen media-for-sm">
       <Outlet />
       <TrelloFooter />
     </Layout>

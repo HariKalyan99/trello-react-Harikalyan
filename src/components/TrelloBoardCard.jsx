@@ -82,7 +82,7 @@ const TrelloBoardCard = () => {
     <Flex
       wrap
       direction="horizontal"
-      className="h-[90%] w-[100%] gap-3 justify-center md:justify-start"
+      className="h-[90%] w-[100%] gap-3 justify-center lg:justify-start"
     >
       <Tooltip
         placement="top"
