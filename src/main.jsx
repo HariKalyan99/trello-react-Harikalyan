@@ -4,7 +4,7 @@ import './index.css'
 import App from './routes/App.jsx';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import TrelloDashboard from './components/TrelloDashboard.jsx';
-import TrelloBoardsPage from './components/TrelloBoardsPage.jsx';
+import TrelloBoardsPage from './components/TrelloBoardSpace/TrelloBoardsPage.jsx';
 
 
 const router = createBrowserRouter([

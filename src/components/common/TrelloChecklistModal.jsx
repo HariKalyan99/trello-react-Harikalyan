@@ -1,6 +1,8 @@
 import { Modal, Space } from "antd";
-import React from "react";
+import React, { useContext } from "react";
 import { Col, InputNumber, Row, Slider } from "antd";
+import TrelloBoardCard from "../TrelloBoardCard";
+import { boardStore } from "../../store/TrelloStoreProvider";
 
 const TrelloChecklistModal = ({
   modalOpen,
@@ -8,18 +10,25 @@ const TrelloChecklistModal = ({
   inputValue,
   setInputValue,
   name,
+  addCheckList
 }) => {
+  const {setBoardPopOpen} = useContext(boardStore);
   const onChange = (newValue) => {
     setInputValue(newValue);
   };
 
   return (
     <Modal
-      title="Vertically centered modal dialog"
+      title={`Card name: ${name}`}
       centered
       open={modalOpen}
-      onOk={() => setModalOpen(false)}
-      onCancel={() => setModalOpen(false)}
+      onOk={() => {
+        setBoardPopOpen(false);
+        setModalOpen(false)}}
+      onCancel={() => {
+        setBoardPopOpen(false);
+        setModalOpen(false)
+      }}
     >
       <Row>
         <Col span={12}>
@@ -43,9 +52,8 @@ const TrelloChecklistModal = ({
         </Col>
       </Row>
 
-      <Space>
-        <span>{name}</span>
-      </Space>
+      <TrelloBoardCard checklistActive addCheckList={addCheckList}/>
+    
     </Modal>
   );
 };

@@ -6,7 +6,9 @@ export const boardStore = createContext({
   addBoardFn: () => {},
   delBoardFn: () => {},
   skeletonLoad: true,
-  setSkeletonLoad: () => {}
+  setSkeletonLoad: () => {},
+  boardPopOpen: false,
+  setBoardPopOpen: () => {}
 });
 
 function pureBoardReducerFn(currentBoardList, action) {
@@ -34,6 +36,9 @@ const TrelloStoreProvider = ({ children }) => {
   const [boardName, setBoardName] = useState("");
   const [deleteBoard, setDeleteBoard] = useState("");
   const [skeletonLoad, setSkeletonLoad] = useState(false);
+
+
+  const [boardPopOpen, setBoardPopOpen] = useState(false);
 
 
   const [boardList, dispatchBoardReducerFn] = useReducer(pureBoardReducerFn, [])
@@ -131,7 +136,7 @@ const TrelloStoreProvider = ({ children }) => {
   }
 
   return (
-    <boardStore.Provider value={{ boardList, addBoardFn, delBoardFn, skeletonLoad }}>
+    <boardStore.Provider value={{ boardList, addBoardFn, delBoardFn, skeletonLoad, boardPopOpen, setBoardPopOpen }}>
       {children}
     </boardStore.Provider>
   );

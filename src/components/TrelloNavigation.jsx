@@ -1,7 +1,7 @@
 import React from "react";
 import { Avatar, Flex, Layout, Space, Tooltip } from "antd";
 const { Header } = Layout;
-import { MdDashboard } from "react-icons/md";
+import { LuArrowBigLeftDash } from "react-icons/lu";
 import { Link } from "react-router-dom";
 
 const TrelloNavigation = ({ boardsPage }) => {
@@ -22,13 +22,13 @@ const TrelloNavigation = ({ boardsPage }) => {
             title="Back to dashboard"
           >
           <Link to={"/"} style={linkStyle}>
-            <Space className="h-[2rem] w-[2rem] bg-slate-900 flex justify-center hover:bg-slate-600">
-              <MdDashboard className="text-lg hover:text-xl cursor-pointer" />
+            <Space className="h-[2rem] w-[3rem] bg-slate-900 flex justify-center hover:bg-slate-600">
+              <LuArrowBigLeftDash className="text-xl cursor-pointer" />
             </Space>
           </Link>
           </Tooltip>
         )}
-        <Space className={`h-[50px] w-[80px] ${boardsPage && "bg-black px-2"}`}>
+        <Space className={`h-[50px] w-[100px] ${boardsPage && "bg-black px-2"}`}>
           <img
             src="https://trello.com/assets/87e1af770a49ce8e84e3.gif"
             alt="trello_gif"

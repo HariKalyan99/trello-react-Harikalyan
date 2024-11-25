@@ -1,20 +1,32 @@
 import { Content } from "antd/es/layout/layout";
-import React, { useEffect, useRef, useState } from "react";
-import TrelloNavigation from "./TrelloNavigation";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import { Flex, Space } from "antd";
 import {  useParams } from "react-router-dom";
 import axios from "axios";
 import TrelloCardDetails from "./TrelloCardDetails";
 import { IoAdd } from "react-icons/io5";
 import { MdOutlineCancelScheduleSend } from "react-icons/md";
+import TrelloNavigation from "../TrelloNavigation";
 
 let APIKey = import.meta.env.VITE_APIKEY;
 let APIToken = import.meta.env.VITE_APITOKEN;
+function pureBoardSpaceReducerFn (currentBoardSpace, action){
+    let boardSpace = currentBoardSpace;
+    const {type} = action;
+    switch (type) {
+        case "INITIAL_LISTS":
+            return boardSpace = action.payload.data;
+        case "ADD_LIST":
+            return boardSpace = [action.payload.data, ...currentBoardSpace]
+        default:
+            return boardSpace;
+    }
+}
 
 const TrelloBoardsPage = () => {
   const { id } = useParams();
 
-  const [lists, setLists] = useState([]);
+  // const [lists, setLists] = useState([]);
   const [archiveList, setArchiveList] = useState([]);
   const [invoker, setInvoker] = useState(false);
 
@@ -22,14 +34,20 @@ const TrelloBoardsPage = () => {
 
   const [newList, setNewList] = useState("");
   const listInputRef = useRef("");
-
+  const [lists, dispatchReducerBoardSpace] = useReducer(pureBoardSpaceReducerFn, [])
   useEffect(() => {
     const fetchListsById = async (boardId) => {
       try {
         const { data } = await axios.get(
           `https://api.trello.com/1/boards/${boardId}/lists?key=${APIKey}&token=${APIToken}`
         );
-        setLists(data);
+
+        dispatchReducerBoardSpace({
+          type: "INITIAL_LISTS",
+          payload: {
+            data
+          }
+        })
       } catch (error) {
         if (error.name === "AbortError") {
           console.log("Fetch aborted");
@@ -74,7 +92,12 @@ const TrelloBoardsPage = () => {
           `https://api.trello.com/1/lists?name=${name}&idBoard=${id}&key=${APIKey}&token=${APIToken}`
         );
         if (data.status === 200) {
-          setLists([data.data, ...lists]);
+          dispatchReducerBoardSpace({
+            type: "ADD_LIST",
+            payload: {
+              data: data.data
+            }
+          })
         }
       } catch (error) {
         if (error.name === "AbortError") {
@@ -132,7 +155,7 @@ const TrelloBoardsPage = () => {
                 />
                 <Space className="w-full">
                   <button
-                    type="button"
+                    type="submit"
                     className="bg-slate-500 hover:bg-slate-700 w-[100px] text-base rounded text-white h-[40px]"
                   >
                     Add List

@@ -106,13 +106,21 @@ const TrelloCardDetails = ({ list, deleteList, invoker }) => {
     addCardRef.current.value = "";
     setAddCardActive(!addCardActive);
   };
+
+  // for checklist
+
+  const addCheckList = (checkList) => {
+    console.log(checkList);
+  }
+
+
   return (
     <Space className="min-h-[10%] h-auto min-w-[320px] w-[300px] flex rounded-xl bg-slate-200 flex-col justify-center items-center py-3">
       <Space className="w-[300px] h-full flex justify-between">
         <span className="text-lg">{list.name}</span>
         <Popconfirm
           title="Archive this list"
-          description="Are you sure to delete this list?"
+          description="Are you sure to archive this list?"
           okText="Yes"
           cancelText="No"
           onConfirm={() => deleteList(list.id)}
@@ -124,7 +132,7 @@ const TrelloCardDetails = ({ list, deleteList, invoker }) => {
         
       {listOfCards?.length > 0 &&
         listOfCards.map(({ name, id }) => (
-          <TrelloCard key={id} name={name} id={id} delCardfromList={delCardfromList}/>
+          <TrelloCard key={id} name={name} id={id} delCardfromList={delCardfromList} addCheckList={addCheckList}/>
         ))}
 
       {addCardActive ? (
@@ -141,7 +149,7 @@ const TrelloCardDetails = ({ list, deleteList, invoker }) => {
           />
           <Space className="w-full">
             <button
-              type="button"
+              type="submit"
               className="bg-slate-500 hover:bg-slate-700 w-[100px] text-base rounded text-white h-[40px]"
             >
               Add Card
