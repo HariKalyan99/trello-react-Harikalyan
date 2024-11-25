@@ -12,6 +12,13 @@
   letter-spacing: 0.7px;
 }
 
+.scrollableFlex::-webkit-scrollbar { 
+  display: none;  /* Safari and Chrome */
+}
+
+
+
+
 @media (min-width: 300px) and (max-width: 732px) {
   .media-for-sm {
     height: auto !important;
