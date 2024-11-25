@@ -2,7 +2,7 @@ import { Content } from "antd/es/layout/layout";
 import React, { useEffect, useRef, useState } from "react";
 import TrelloNavigation from "./TrelloNavigation";
 import { Flex, Space } from "antd";
-import { data, useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import axios from "axios";
 import TrelloCardDetails from "./TrelloCardDetails";
 import { IoAdd } from "react-icons/io5";
@@ -20,7 +20,7 @@ const TrelloBoardsPage = () => {
 
   const [listActive, setListActive] = useState(false);
 
-  const [newList, setNewList] =useState("");
+  const [newList, setNewList] = useState("");
   const listInputRef = useRef("");
 
   useEffect(() => {
@@ -67,19 +67,14 @@ const TrelloBoardsPage = () => {
     }
   }, [archiveList]);
 
-
-
-
   useEffect(() => {
     const postNewList = async (name) => {
       try {
         const data = await axios.post(
-          
           `https://api.trello.com/1/lists?name=${name}&idBoard=${id}&key=${APIKey}&token=${APIToken}`
         );
         if (data.status === 200) {
-          
-          setLists([data.data, ...lists ])
+          setLists([data.data, ...lists]);
         }
       } catch (error) {
         if (error.name === "AbortError") {
@@ -120,8 +115,6 @@ const TrelloBoardsPage = () => {
                 list={list}
               />
             ))}
-
-
 
           {listActive ? (
             <Space className="min-h-[7%] h-auto min-w-[320px] w-[300px] flex rounded-xl bg-slate-100 shadow-xl flex-col justify-center items-center py-3">

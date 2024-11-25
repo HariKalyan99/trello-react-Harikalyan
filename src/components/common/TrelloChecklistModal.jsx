@@ -3,8 +3,8 @@ import React from "react";
 import { Col, InputNumber, Row, Slider } from "antd";
 
 const TrelloChecklistModal = ({
-  modal2Open,
-  setModal2Open,
+  modalOpen,
+  setModalOpen,
   inputValue,
   setInputValue,
   name,
@@ -17,9 +17,9 @@ const TrelloChecklistModal = ({
     <Modal
       title="Vertically centered modal dialog"
       centered
-      open={modal2Open}
-      onOk={() => setModal2Open(false)}
-      onCancel={() => setModal2Open(false)}
+      open={modalOpen}
+      onOk={() => setModalOpen(false)}
+      onCancel={() => setModalOpen(false)}
     >
       <Row>
         <Col span={12}>

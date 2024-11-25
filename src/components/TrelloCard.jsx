@@ -5,7 +5,7 @@ import { MdCancelPresentation } from "react-icons/md";
 
 
 const TrelloCard = ({ id, name, delCardfromList }) => {
-  const [modal2Open, setModal2Open] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const [inputValue, setInputValue] = useState(1);
   return (
@@ -13,14 +13,14 @@ const TrelloCard = ({ id, name, delCardfromList }) => {
       <TrelloChecklistModal
         inputValue={inputValue}
         setInputValue={setInputValue}
-        modal2Open={modal2Open}
-        setModal2Open={setModal2Open}
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
         name={name}
       />
       <Space
         key={id}
         className="w-[300px] h-full border-2 flex justify-between bg-white p-2 rounded-lg text-wrap"
-        onClick={() => setModal2Open(true)}
+        onClick={() => setModalOpen(true)}
       >
         <span >{name}</span>
         <MdCancelPresentation onClick={(e) => {
