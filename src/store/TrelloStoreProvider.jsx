@@ -44,7 +44,7 @@ const TrelloStoreProvider = ({ children }) => {
     const fetchBoards = async () => {
       try {
         setSkeletonLoad(true)
-        const { data } = await axios(
+        const { data } = await axios.get(
           `https://api.trello.com/1/members/me/boards?key=${APIKey}&token=${APIToken}`,
           {
             signal,

@@ -20,7 +20,7 @@ const TrelloDashboard = () => {
           </Title>
         </Flex>
 
-        <Flex className="h-full w-[70%] flex justify-center items-center flex-col ">
+        <Flex className="h-full w-[70%] flex justify-start items-center flex-col ">
           <Title className="text-center w-full my-3  lg:text-left">
             Boards
           </Title>
