@@ -10,7 +10,7 @@ const TrelloDashboard = () => {
   return (
     <>
       <TrelloNavigation />
-      <Content className="bg-white h-full w-full flex flex-col justify-start items-center gap-1">
+      <Content className="bg-white h-screen w-full flex flex-col justify-start items-center gap-1">
         <Flex
           direction="horizontal"
           className="border-b-4 border-slate-500 h-[30%] w-[70%] flex justify-center items-center"

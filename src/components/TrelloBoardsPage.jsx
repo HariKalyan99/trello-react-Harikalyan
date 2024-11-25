@@ -7,7 +7,7 @@ const TrelloBoardsPage = () => {
   return (
     <>
       <TrelloNavigation boardsPage />
-      <Content className="bg-slate-400 h-full w-full flex flex-col justify-start items-center gap-1">
+      <Content className="bg-slate-400 h-screen w-full flex flex-col justify-start items-center gap-1">
         <Flex >
 
         </Flex>
