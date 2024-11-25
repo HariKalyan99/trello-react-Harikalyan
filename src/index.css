@@ -9,7 +9,7 @@
 *{
   padding: 0;margin: 0;box-sizing: border-box;
   font-family: "Lobster", sans-serif !important;
-  letter-spacing: 0.7px;
+  letter-spacing: 0.9px;
 }
 
 .scrollableFlex::-webkit-scrollbar { 

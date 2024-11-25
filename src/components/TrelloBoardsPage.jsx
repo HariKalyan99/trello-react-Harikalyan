@@ -99,7 +99,8 @@ const TrelloBoardsPage = () => {
     setArchiveList(id);
   };
 
-  const handleClick = () => {
+  const handleSubmitList = (e) => {
+    e.preventDefault();
     setNewList(listInputRef.current.value);
     listInputRef.current.value = "";
     setListActive(!listActive);
@@ -120,11 +121,14 @@ const TrelloBoardsPage = () => {
               />
             ))}
 
+
+
           {listActive ? (
             <Space className="min-h-[7%] h-auto min-w-[320px] w-[300px] flex rounded-xl bg-slate-100 shadow-xl flex-col justify-center items-center py-3">
-              <div
+              <form
+                id="listForm"
                 className="w-[300px] h-full flex justify-start items-start flex-col gap-3"
-                
+                onSubmit={(e) => handleSubmitList(e)}
               >
                 <input
                   type="text"
@@ -137,7 +141,6 @@ const TrelloBoardsPage = () => {
                   <button
                     type="button"
                     className="bg-slate-500 hover:bg-slate-700 w-[100px] text-base rounded text-white h-[40px]"
-                    onClick={() => handleClick()}
                   >
                     Add List
                   </button>
@@ -148,7 +151,7 @@ const TrelloBoardsPage = () => {
                     <MdOutlineCancelScheduleSend className="hover:text-xl cursor-pointer text-red-500" />
                   </span>
                 </Space>
-              </div>
+              </form>
             </Space>
           ) : (
             <Space
