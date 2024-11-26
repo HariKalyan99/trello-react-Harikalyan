@@ -8,7 +8,7 @@ import CheckItem from "./CheckItem";
 let APIKey = import.meta.env.VITE_APIKEY;
 let APIToken = import.meta.env.VITE_APITOKEN;
 
-const TrelloCheckListSpace = ({ name, id, deleteCheckList, cardId}) => {
+const TrelloCheckListSpace = ({ name, id, deleteCheckList, cardId, checkListArray}) => {
   const [checkItems, setCheckItems] = useState([]);
   const [getCheckItem, setCheckItem] = useState("");
   const [getDelCheckItem, setDelCheckItem] = useState("");
@@ -29,6 +29,7 @@ const TrelloCheckListSpace = ({ name, id, deleteCheckList, cardId}) => {
           `https://api.trello.com/1/checklists/${id}/checkItems?key=${APIKey}&token=${APIToken}`
         );
         if (data?.length > 0) {
+          console.log(data);
           setCheckItems(data);
         }
       } catch (error) {
@@ -39,7 +40,7 @@ const TrelloCheckListSpace = ({ name, id, deleteCheckList, cardId}) => {
     if (id?.length > 0) {
       getCheckItem(id);
     }
-  }, []);
+  }, [checkListArray]);
 
   useEffect(() => {
     const postCheckItem = async ({ id, name }) => {
