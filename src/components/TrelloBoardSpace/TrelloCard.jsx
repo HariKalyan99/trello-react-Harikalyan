@@ -15,7 +15,7 @@ const TrelloCard = ({ id, name, delCardfromList, addCheckList, getCheckList }) =
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
         name={name}
-        id={id}
+        cardId={id}
         addCheckList={addCheckList}
         getCheckList={getCheckList}
       />
