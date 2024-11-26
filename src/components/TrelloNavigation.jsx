@@ -1,7 +1,8 @@
 import React from "react";
 import { Avatar, Flex, Layout, Space, Tooltip } from "antd";
 const { Header } = Layout;
-import { LuArrowBigLeftDash } from "react-icons/lu";
+import { IoReturnDownBackOutline } from "react-icons/io5";
+
 import { Link } from "react-router-dom";
 
 const TrelloNavigation = ({ boardsPage }) => {
@@ -23,7 +24,7 @@ const TrelloNavigation = ({ boardsPage }) => {
           >
           <Link to={"/"} style={linkStyle}>
             <Space className="h-[2rem] w-[3rem] bg-slate-900 flex justify-center hover:bg-slate-600">
-              <LuArrowBigLeftDash className="text-xl cursor-pointer" />
+              <IoReturnDownBackOutline className="text-xl cursor-pointer" />
             </Space>
           </Link>
           </Tooltip>

@@ -1,8 +1,14 @@
 import { Modal, Space } from "antd";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import TrelloBoardCard from "../TrelloBoardCard";
 import { boardStore } from "../../store/TrelloStoreProvider";
 import TrelloCheckListSpace from "../TrelloCheckListSpace/TrelloCheckListSpace";
+import axios from "axios";
+
+let APIKey = import.meta.env.VITE_APIKEY;
+let APIToken = import.meta.env.VITE_APITOKEN;
+
+
 
 const TrelloChecklistModal = ({
   modalOpen,
@@ -13,7 +19,23 @@ const TrelloChecklistModal = ({
   getCheckList
 }) => {
   const {setBoardPopOpen} = useContext(boardStore);
-  
+  const [checkListArray, setChecklistArray] = useState(getCheckList)
+
+  useEffect(() => {
+    const getCardCheckList = async(id) => {
+      try {
+        const {data} = await axios.get(`https://api.trello.com/1/cards/${id}/checklists?key=${APIKey}&token=${APIToken}`)
+        setChecklistArray(data);
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    if(id?.length > 0){
+      getCardCheckList(id);
+    }
+
+  }, [getCheckList])
 
   return (
     <Modal
@@ -32,7 +54,7 @@ const TrelloChecklistModal = ({
 
       <Space className="max-h-[100%] h-auto flex flex-col items-start my-5 w-full">
       
-      {getCheckList?.length > 0 && getCheckList?.map((_,ind) => <TrelloCheckListSpace key={ind}/>)}
+      {checkListArray?.length > 0 && checkListArray?.map((_,ind) => <TrelloCheckListSpace key={ind}/>)}
 
       </Space>
       

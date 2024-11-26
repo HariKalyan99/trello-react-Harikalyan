@@ -92,6 +92,7 @@ const TrelloCardDetails = ({ list, deleteList, invoker }) => {
   }, [delCards]);
 
 
+  
 
 
   useEffect(() => {
@@ -101,21 +102,14 @@ const TrelloCardDetails = ({ list, deleteList, invoker }) => {
         const { data } = await axios.post(
           `https://api.trello.com/1/checklists?idCard=${id}&name=${name}&key=${APIKey}&token=${APIToken}`
         );
-          getCardCheckList(id);
+        setCheckLists(data);
         // setListOfCards([...listOfCards, data]);
       } catch (error) {
         console.error(error);
       }
     };
 
-    const getCardCheckList = async(id) => {
-      try {
-        const {data} = await axios.get(`https://api.trello.com/1/cards/${id}/checklists?key=${APIKey}&token=${APIToken}`)
-        setCheckLists(data);
-      } catch (error) {
-        console.log(error)
-      }
-    }
+
 
     if (getCheckListName.id?.length > 0) {
       postNewCardCheckList(getCheckListName);
