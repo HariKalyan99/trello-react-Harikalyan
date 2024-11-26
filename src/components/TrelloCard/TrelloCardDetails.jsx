@@ -1,15 +1,16 @@
-import { Popconfirm, Space } from "antd";
+import { Popconfirm, Space, Tooltip } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { IoAdd } from "react-icons/io5";
 import { MdOutlineCancelScheduleSend } from "react-icons/md";
 import { BsThreeDots } from "react-icons/bs";
 import axios from "axios";
 import TrelloCard from "./TrelloCard";
+import { MdArchive } from "react-icons/md";
 
 let APIKey = import.meta.env.VITE_APIKEY;
 let APIToken = import.meta.env.VITE_APITOKEN;
 
-const TrelloCardDetails = ({ list, deleteList, invoker }) => {
+const TrelloCardDetails = ({ list, deleteList,deleteCardsOfLists, invokerArchive }) => {
   const [addCardActive, setAddCardActive] = useState(false);
   const [listOfCards, setListOfCards] = useState([]);
   const [cards, setCards] = useState([]);
@@ -46,7 +47,7 @@ const TrelloCardDetails = ({ list, deleteList, invoker }) => {
     return () => {
       controller.abort();
     };
-  }, [invoker]);
+  }, [invokerArchive]);
 
   useEffect(() => {
     const postNewCard = async ({ name, id }) => {
@@ -69,14 +70,13 @@ const TrelloCardDetails = ({ list, deleteList, invoker }) => {
     }
   }, [cards]);
 
-
   useEffect(() => {
     const delCard = async (id) => {
       try {
         await axios.delete(
           `https://api.trello.com/1/cards/${id}?key=${APIKey}&token=${APIToken}`
         );
-        setListOfCards(listOfCards.filter(x => x.id !== id));
+        setListOfCards(listOfCards.filter((x) => x.id !== id));
       } catch (error) {
         if (error.name === "AbortError") {
           console.log("Fetch aborted");
@@ -87,13 +87,9 @@ const TrelloCardDetails = ({ list, deleteList, invoker }) => {
     };
 
     if (delCards?.length > 0) {
-        delCard(delCards);
+      delCard(delCards);
     }
   }, [delCards]);
-
-
-  
-
 
   useEffect(() => {
     const postNewCardCheckList = async ({ name, id }) => {
@@ -107,14 +103,10 @@ const TrelloCardDetails = ({ list, deleteList, invoker }) => {
       }
     };
 
-
-
     if (getCheckListName.id?.length > 0) {
       postNewCardCheckList(getCheckListName);
     }
   }, [getCheckListName]);
-
-
 
   const delCardfromList = (id) => {
     setDelCards(id);
@@ -131,12 +123,9 @@ const TrelloCardDetails = ({ list, deleteList, invoker }) => {
     setAddCardActive(!addCardActive);
   };
 
-  // for checklist
-
   const addCheckList = (name, id) => {
-    setCheckListsName({name, id});
-  }
-
+    setCheckListsName({ name, id });
+  };
 
   return (
     <Space className="min-h-[10%] h-auto min-w-[320px] w-[300px] flex rounded-xl bg-slate-200 flex-col justify-center items-center py-3">
@@ -151,12 +140,19 @@ const TrelloCardDetails = ({ list, deleteList, invoker }) => {
         >
           <BsThreeDots className="text-base cursor-pointer hover:text-slate-600" />
         </Popconfirm>
+
       </Space>
 
-        
       {listOfCards?.length > 0 &&
         listOfCards.map(({ name, id }) => (
-          <TrelloCard key={id} name={name} id={id} delCardfromList={delCardfromList} getCheckList={getCheckList} addCheckList={addCheckList}/>
+          <TrelloCard
+            key={id}
+            name={name}
+            id={id}
+            delCardfromList={delCardfromList}
+            getCheckList={getCheckList}
+            addCheckList={addCheckList}
+          />
         ))}
 
       {addCardActive ? (
@@ -184,22 +180,26 @@ const TrelloCardDetails = ({ list, deleteList, invoker }) => {
             >
               <MdOutlineCancelScheduleSend className="hover:text-xl cursor-pointer text-red-500" />
             </span>
+
           </Space>
         </form>
       ) : (
         <Space
-          className="w-[300px] h-full flex justify-start"
-          onClick={() => setAddCardActive(!addCardActive)}
+          className="w-[300px] h-full flex justify-between"
+          
         >
+          <Space className="flex">
           <IoAdd size={25} />
-          <span className="text-lg hover:text-xl cursor-pointer">
+          <span className="text-lg hover:text-slate-500 cursor-pointer" onClick={() => setAddCardActive(!addCardActive)}>
             {" "}
             Add a card
           </span>
+          </Space>
+          <Tooltip title="Archive all the cards">
+          <MdArchive className="text-lg hover:text-slate-500 cursor-pointer" onClick={() => deleteCardsOfLists(list.id)}/>
+          </Tooltip>
         </Space>
       )}
-
-      
     </Space>
   );
 };

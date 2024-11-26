@@ -1,5 +1,5 @@
 import React from "react";
-import {Layout} from "antd";
+import { Layout } from "antd";
 import TrelloFooter from "../components/TrelloFooter";
 
 import TrelloStoreProvider from "../store/TrelloStoreProvider";
@@ -9,9 +9,9 @@ function App() {
   return (
     <TrelloStoreProvider>
       <Layout className="overflow-hidden w-[100%] max-w-[100%] h-screen media-for-sm">
-      <Outlet />
-      <TrelloFooter />
-    </Layout>
+        <Outlet />
+        <TrelloFooter />
+      </Layout>
     </TrelloStoreProvider>
   );
 }

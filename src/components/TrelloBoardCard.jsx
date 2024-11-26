@@ -11,8 +11,14 @@ import { GoChecklist } from "react-icons/go";
 import { MdCancelScheduleSend } from "react-icons/md";
 
 const TrelloBoardCard = ({ checklistActive, addCheckList, id }) => {
-  const { boardList, addBoardFn, delBoardFn, skeletonLoad,boardPopOpen, setBoardPopOpen } =
-    useContext(boardStore);
+  const {
+    boardList,
+    addBoardFn,
+    delBoardFn,
+    skeletonLoad,
+    boardPopOpen,
+    setBoardPopOpen,
+  } = useContext(boardStore);
   // const [boardPopOpen, setBoardPopOpen] = useState(false);
 
   const boardRef = useRef("");
@@ -49,48 +55,56 @@ const TrelloBoardCard = ({ checklistActive, addCheckList, id }) => {
     e.preventDefault();
     addCheckList(boardRef.current.value, id);
     boardRef.current.value = "";
-    setBoardPopOpen(!boardPopOpen)
-  }
+    setBoardPopOpen(!boardPopOpen);
+  };
 
   const content = (
     <form
-      id={`${checklistActive ?  "checkListForm" : "boardForm"}`}
-      onSubmit={(e) => checklistActive ? handleSubmitChecklist(e) : handleSubmit(e)}
+      id={`${checklistActive ? "checkListForm" : "boardForm"}`}
+      onSubmit={(e) =>
+        checklistActive ? handleSubmitChecklist(e) : handleSubmit(e)
+      }
       className={`flex h-[150px] flex-col justify-around text-xl`}
     >
       <input
-        placeholder={`${checklistActive ? "Add your checklist here.." : "enter the board name"}`}
+        placeholder={`${
+          checklistActive ? "Add your checklist here.." : "enter the board name"
+        }`}
         required
         className="h-[30%] p-3 border rounded"
         ref={boardRef}
       />
-      {checklistActive ? <div className="h-full flex justify-end gap-2  items-center px-2">
-      <button
-        type="submit"
-        className="bg-slate-500 hover:bg-slate-700 w-[30%] text-base rounded text-white h-[30%]"
-      >
-        Add
-      </button>
+      {checklistActive ? (
+        <div className="h-full flex justify-end gap-2  items-center px-2">
+          <button
+            type="submit"
+            className="bg-slate-500 hover:bg-slate-700 w-[30%] text-base rounded text-white h-[30%]"
+          >
+            Add
+          </button>
 
-      <MdCancelScheduleSend
-        className="text-black hover:text-slate-300 cursor-pointer"
-        size={30}
-        onClick={() => setBoardPopOpen(!boardPopOpen)}
-        />
-        </div> :  <>
-        <button
-        type="submit"
-        className="bg-slate-500 hover:bg-slate-700 w-[30%] text-base rounded text-white h-[20%]"
-      >
-        Add
-      </button>
+          <MdCancelScheduleSend
+            className="text-black hover:text-slate-300 cursor-pointer"
+            size={30}
+            onClick={() => setBoardPopOpen(!boardPopOpen)}
+          />
+        </div>
+      ) : (
+        <>
+          <button
+            type="submit"
+            className="bg-slate-500 hover:bg-slate-700 w-[30%] text-base rounded text-white h-[20%]"
+          >
+            Add
+          </button>
 
-      <MdCancel
-        className="text-red-200 hover:text-red-300"
-        size={40}
-        onClick={() => setBoardPopOpen(!boardPopOpen)}
-        />
-        </>}
+          <MdCancel
+            className="text-red-200 hover:text-red-300"
+            size={40}
+            onClick={() => setBoardPopOpen(!boardPopOpen)}
+          />
+        </>
+      )}
     </form>
   );
 
@@ -125,9 +139,8 @@ const TrelloBoardCard = ({ checklistActive, addCheckList, id }) => {
               className="h-[40px] w-[200px] flex justify-center items-center bg-slate-500"
               onClick={() => setBoardPopOpen(true)}
             >
-              
               <span className="text-lg w-[100%] h-full text-black flex justify-center items-center gap-2">
-              <GoChecklist className="text-slate-900"/> Add Checklist
+                <GoChecklist className="text-slate-900" /> Add Checklist
               </span>
             </Card>
           </Popover>

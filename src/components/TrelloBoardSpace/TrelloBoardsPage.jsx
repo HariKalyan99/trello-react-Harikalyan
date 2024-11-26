@@ -1,7 +1,7 @@
 import { Content } from "antd/es/layout/layout";
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import { Flex, Space } from "antd";
-import {  useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import TrelloCardDetails from "../TrelloCard/TrelloCardDetails";
 import { IoAdd } from "react-icons/io5";
@@ -10,31 +10,37 @@ import TrelloNavigation from "../TrelloNavigation";
 
 let APIKey = import.meta.env.VITE_APIKEY;
 let APIToken = import.meta.env.VITE_APITOKEN;
-function pureBoardSpaceReducerFn (currentBoardSpace, action){
-    let boardSpace = currentBoardSpace;
-    const {type} = action;
-    switch (type) {
-        case "INITIAL_LISTS":
-            return boardSpace = action.payload.data;
-        case "ADD_LIST":
-            return boardSpace = [action.payload.data, ...currentBoardSpace]
-        default:
-            return boardSpace;
-    }
+function pureBoardSpaceReducerFn(currentBoardSpace, action) {
+  let boardSpace = currentBoardSpace;
+  const { type } = action;
+  switch (type) {
+    case "INITIAL_LISTS":
+      return (boardSpace = action.payload.data);
+    case "ADD_LIST":
+      return (boardSpace = [action.payload.data, ...currentBoardSpace]);
+    default:
+      return boardSpace;
+  }
 }
 
 const TrelloBoardsPage = () => {
   const { id } = useParams();
 
   // const [lists, setLists] = useState([]);
-  const [archiveList, setArchiveList] = useState([]);
+  const [archiveList, setArchiveList] = useState("");
+  const [archiveListOfCards, setarchiveListOfCards] = useState("");
+
   const [invoker, setInvoker] = useState(false);
+  const [invokerArchive, setInvokerArchive] = useState(false);
 
   const [listActive, setListActive] = useState(false);
 
   const [newList, setNewList] = useState("");
   const listInputRef = useRef("");
-  const [lists, dispatchReducerBoardSpace] = useReducer(pureBoardSpaceReducerFn, [])
+  const [lists, dispatchReducerBoardSpace] = useReducer(
+    pureBoardSpaceReducerFn,
+    []
+  );
   useEffect(() => {
     const fetchListsById = async (boardId) => {
       try {
@@ -45,9 +51,9 @@ const TrelloBoardsPage = () => {
         dispatchReducerBoardSpace({
           type: "INITIAL_LISTS",
           payload: {
-            data
-          }
-        })
+            data,
+          },
+        });
       } catch (error) {
         if (error.name === "AbortError") {
           console.log("Fetch aborted");
@@ -60,13 +66,37 @@ const TrelloBoardsPage = () => {
     if (id) {
       fetchListsById(id);
     }
-  }, []);
+  }, [invoker]);
 
   useEffect(() => {
     const archiveAllCards = async (id) => {
       try {
         const data = await axios.post(
           `https://api.trello.com/1/lists/${id}/archiveAllCards?key=${APIKey}&token=${APIToken}`
+        );
+        if (data.status === 200) {
+          setInvokerArchive(!invokerArchive);
+        }
+      } catch (error) {
+        if (error.name === "AbortError") {
+          console.log("Fetch aborted");
+        } else {
+          console.warn(error);
+        }
+      }
+    };
+
+    if (archiveListOfCards?.length > 0) {
+      archiveAllCards(archiveListOfCards);
+    }
+  }, [archiveListOfCards]);
+
+
+  useEffect(() => {
+    const archiveListFn = async (id) => {
+      try {
+        const data = await axios.put(
+          `https://api.trello.com/1/lists/${id}/closed?key=${APIKey}&token=${APIToken}&value=true`
         );
         if (data.status === 200) {
           setInvoker(!invoker);
@@ -81,9 +111,10 @@ const TrelloBoardsPage = () => {
     };
 
     if (archiveList?.length > 0) {
-      archiveAllCards(archiveList);
+      archiveListFn(archiveList);
     }
   }, [archiveList]);
+
 
   useEffect(() => {
     const postNewList = async (name) => {
@@ -95,9 +126,9 @@ const TrelloBoardsPage = () => {
           dispatchReducerBoardSpace({
             type: "ADD_LIST",
             payload: {
-              data: data.data
-            }
-          })
+              data: data.data,
+            },
+          });
         }
       } catch (error) {
         if (error.name === "AbortError") {
@@ -117,6 +148,10 @@ const TrelloBoardsPage = () => {
     setArchiveList(id);
   };
 
+  const deleteCardsOfLists = (id) => {
+    setarchiveListOfCards(id);
+  };
+
   const handleSubmitList = (e) => {
     e.preventDefault();
     setNewList(listInputRef.current.value);
@@ -132,10 +167,11 @@ const TrelloBoardsPage = () => {
           {lists?.length > 0 &&
             lists?.map((list, ind) => (
               <TrelloCardDetails
-                invoker={invoker}
                 deleteList={deleteList}
                 key={list.id}
                 list={list}
+                deleteCardsOfLists={deleteCardsOfLists}
+                invokerArchive={invokerArchive}
               />
             ))}
 

@@ -1,22 +1,25 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Col, Flex, Row, Slider, Space } from "antd";
+import { Flex, Space } from "antd";
 import { GoChecklist } from "react-icons/go";
 import { MdOutlineCancel } from "react-icons/md";
 import axios from "axios";
 import CheckItem from "./CheckItem";
+import { Progress } from "antd";
 
 let APIKey = import.meta.env.VITE_APIKEY;
 let APIToken = import.meta.env.VITE_APITOKEN;
 
-const TrelloCheckListSpace = ({ name, id, deleteCheckList, cardId, checkListArray}) => {
+const TrelloCheckListSpace = ({
+  name,
+  id,
+  deleteCheckList,
+  cardId,
+  checkListArray,
+}) => {
   const [checkItems, setCheckItems] = useState([]);
   const [getCheckItem, setCheckItem] = useState("");
   const [getDelCheckItem, setDelCheckItem] = useState("");
   const [getUpdateCheckItem, setUpdateCheckItem] = useState("");
-
-  // const onChange = (newValue) => {
-  //     setInputValue(newValue)
-  //   };
 
   const [displayCheck, setDisplayCheck] = useState(false);
 
@@ -76,27 +79,23 @@ const TrelloCheckListSpace = ({ name, id, deleteCheckList, cardId, checkListArra
   }, [getDelCheckItem]);
 
   useEffect(() => {
-    const putCheckItem = async({checkItemId, state, cardId}) => {
-        try {
-        const {data} = await axios.put(`https://api.trello.com/1/cards/${cardId}/checkItem/${checkItemId}?key=${APIKey}&token=${APIToken}&state=${state}`);
-        // setCheckItemDone(({completed, total}) => {
-        //     completed = checkItems.filter(x => x.state === "completed").length;
-        //     total = checkItems.length;
-        // })
-        let findIndex = checkItems.findIndex(x => x.id === checkItemId);
+    const putCheckItem = async ({ checkItemId, state, cardId }) => {
+      try {
+        const { data } = await axios.put(
+          `https://api.trello.com/1/cards/${cardId}/checkItem/${checkItemId}?key=${APIKey}&token=${APIToken}&state=${state}`
+        );
+        let findIndex = checkItems.findIndex((x) => x.id === checkItemId);
         checkItems[findIndex] = data;
-        setCheckItems([...checkItems])
-        } catch (error) {
-           console.log(error); 
-        }
-    }
+        setCheckItems([...checkItems]);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-    if(getUpdateCheckItem.checkItemId?.length > 0){
-        putCheckItem(getUpdateCheckItem)
+    if (getUpdateCheckItem.checkItemId?.length > 0) {
+      putCheckItem(getUpdateCheckItem);
     }
-
-    
-  }, [getUpdateCheckItem])
+  }, [getUpdateCheckItem]);
 
   const addCheckItem = ({ id, name }) => {
     setCheckItem({ id, name });
@@ -106,32 +105,52 @@ const TrelloCheckListSpace = ({ name, id, deleteCheckList, cardId, checkListArra
     setDelCheckItem(checkItemId);
   };
 
-  const updateCheckItem = ({checkItemId, state}) => {
-    setUpdateCheckItem({checkItemId, state, cardId})
-    // setUpdateCheckItem()
-  }
+  const updateCheckItem = ({ checkItemId, state }) => {
+    setUpdateCheckItem({ checkItemId, state, cardId });
+  };
+
+  const percentConverter = (total, completed) => {
+    return Math.ceil((100 / total) * completed);
+  };
+  const progressColors = {
+    "0%": "#E2E8F0",
+    "50%": "#94A3B8",
+    "100%": "#475569",
+  };
 
   return (
     <Flex className="h-full flex flex-col justify-start items-start gap-3 ">
       <span className="text-lg w-[100%] h-full text-black flex justify-start items-center gap-2">
         <GoChecklist className="text-slate-900" /> {name}
       </span>
-      <Row className="w-[400px]">
+
+      <Flex vertical gap="small" className="w-[100%]">
+        <Progress
+          percent={percentConverter(
+            checkItems?.length,
+            checkItems?.filter((x) => x.state === "complete")?.length
+          )}
+          type="line"
+          strokeColor={progressColors}
+        />
+      </Flex>
+
+      {/* <Row className="w-[400px]">
         <Col span={24}>
           <Slider
             min={0}
             max={checkItems?.length}
             value={
               checkItems?.filter((x) => x.state === "complete")?.length > 0
-                ? checkItems?.filter((x) => x.state === "complete")?.length 
+                ? checkItems?.filter((x) => x.state === "complete")?.length
                 : 0
             }
           />
         </Col>
-      </Row>
+      </Row> */}
 
       {checkItems?.length > 0 &&
-        checkItems?.map(({ id, name, state }, ind) => (
+        checkItems?.map(({ id, name, state }) => (
           <CheckItem
             key={id}
             state={state}
