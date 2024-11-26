@@ -97,13 +97,11 @@ const TrelloCardDetails = ({ list, deleteList, invoker }) => {
 
   useEffect(() => {
     const postNewCardCheckList = async ({ name, id }) => {
-      console.log(name, id)
       try {
         const { data } = await axios.post(
           `https://api.trello.com/1/checklists?idCard=${id}&name=${name}&key=${APIKey}&token=${APIToken}`
         );
         setCheckLists(data);
-        // setListOfCards([...listOfCards, data]);
       } catch (error) {
         console.error(error);
       }

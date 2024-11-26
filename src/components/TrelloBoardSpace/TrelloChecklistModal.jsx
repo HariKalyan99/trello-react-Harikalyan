@@ -19,7 +19,9 @@ const TrelloChecklistModal = ({
   getCheckList
 }) => {
   const {setBoardPopOpen} = useContext(boardStore);
-  const [checkListArray, setChecklistArray] = useState(getCheckList)
+  const [checkListArray, setChecklistArray] = useState(getCheckList);
+  const [getDeleteCheckList, setDeleteCheckList] = useState("");
+ 
 
   useEffect(() => {
     const getCardCheckList = async(id) => {
@@ -36,6 +38,34 @@ const TrelloChecklistModal = ({
     }
 
   }, [getCheckList])
+
+
+
+  useEffect(() => {
+    const delCardCheckList = async(id) => {
+      try {
+        await axios.delete(`https://api.trello.com/1/checklists/${id}?key=${APIKey}&token=${APIToken}`)
+        setChecklistArray(checkListArray.filter(x => x.id !== id));
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    if(getDeleteCheckList?.length > 0){
+      delCardCheckList(getDeleteCheckList);
+    }
+
+  }, [getDeleteCheckList])
+
+
+  
+
+  const deleteCheckList = (id) => {
+    setDeleteCheckList(id);
+  }
+
+
+
 
   return (
     <Modal
@@ -54,7 +84,7 @@ const TrelloChecklistModal = ({
 
       <Space className="max-h-[100%] h-auto flex flex-col items-start my-5 w-full">
       
-      {checkListArray?.length > 0 && checkListArray?.map((_,ind) => <TrelloCheckListSpace key={ind}/>)}
+      {checkListArray?.length > 0 && checkListArray?.map(({id, name},ind) => <TrelloCheckListSpace deleteCheckList={deleteCheckList} id={id} name={name} key={ind}/>)}
 
       </Space>
       
