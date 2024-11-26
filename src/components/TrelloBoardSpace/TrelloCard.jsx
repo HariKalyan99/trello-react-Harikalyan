@@ -4,7 +4,7 @@ import { MdCancelPresentation } from "react-icons/md";
 import TrelloChecklistModal from "./TrelloChecklistModal";
 
 
-const TrelloCard = ({ id, name, delCardfromList, addCheckList }) => {
+const TrelloCard = ({ id, name, delCardfromList, addCheckList, getCheckList }) => {
   const [modalOpen, setModalOpen] = useState(false);
 
 
@@ -17,6 +17,7 @@ const TrelloCard = ({ id, name, delCardfromList, addCheckList }) => {
         name={name}
         id={id}
         addCheckList={addCheckList}
+        getCheckList={getCheckList}
       />
       <Space
         key={id}

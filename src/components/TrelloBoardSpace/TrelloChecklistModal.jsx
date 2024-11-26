@@ -8,7 +8,9 @@ const TrelloChecklistModal = ({
   modalOpen,
   setModalOpen,
   name,
-  addCheckList
+  addCheckList,
+  id,
+  getCheckList
 }) => {
   const {setBoardPopOpen} = useContext(boardStore);
   
@@ -26,11 +28,11 @@ const TrelloChecklistModal = ({
         setModalOpen(false)
       }}
     >
-      <TrelloBoardCard checklistActive addCheckList={addCheckList}/>
+      <TrelloBoardCard checklistActive addCheckList={addCheckList} id={id}/>
 
       <Space className="max-h-[100%] h-auto flex flex-col items-start my-5 w-full">
       
-      {[1,2,4,5,6].map((_,ind) => <TrelloCheckListSpace key={ind}/>)}
+      {getCheckList?.length > 0 && getCheckList?.map((_,ind) => <TrelloCheckListSpace key={ind}/>)}
 
       </Space>
       

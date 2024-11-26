@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 import { GoChecklist } from "react-icons/go";import { MdCancelScheduleSend } from "react-icons/md";
 
-const TrelloBoardCard = ({ checklistActive, addCheckList }) => {
+const TrelloBoardCard = ({ checklistActive, addCheckList, id }) => {
   const { boardList, addBoardFn, delBoardFn, skeletonLoad,boardPopOpen, setBoardPopOpen } =
     useContext(boardStore);
   // const [boardPopOpen, setBoardPopOpen] = useState(false);
@@ -46,7 +46,7 @@ const TrelloBoardCard = ({ checklistActive, addCheckList }) => {
 
   const handleSubmitChecklist = (e) => {
     e.preventDefault();
-    addCheckList(boardRef.current.value);
+    addCheckList(boardRef.current.value, id);
     boardRef.current.value = "";
     setBoardPopOpen(!boardPopOpen)
   }

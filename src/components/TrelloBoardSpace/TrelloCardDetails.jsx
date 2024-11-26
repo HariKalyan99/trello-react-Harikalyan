@@ -14,6 +14,8 @@ const TrelloCardDetails = ({ list, deleteList, invoker }) => {
   const [listOfCards, setListOfCards] = useState([]);
   const [cards, setCards] = useState([]);
   const [delCards, setDelCards] = useState("");
+  const [getCheckListName, setCheckListsName] = useState("");
+  const [getCheckList, setCheckLists] = useState([]);
 
   const addCardRef = useRef("");
   useEffect(() => {
@@ -68,9 +70,6 @@ const TrelloCardDetails = ({ list, deleteList, invoker }) => {
   }, [cards]);
 
 
-
-
-
   useEffect(() => {
     const delCard = async (id) => {
       try {
@@ -92,6 +91,39 @@ const TrelloCardDetails = ({ list, deleteList, invoker }) => {
     }
   }, [delCards]);
 
+
+
+
+  useEffect(() => {
+    const postNewCardCheckList = async ({ name, id }) => {
+      console.log(name, id)
+      try {
+        const { data } = await axios.post(
+          `https://api.trello.com/1/checklists?idCard=${id}&name=${name}&key=${APIKey}&token=${APIToken}`
+        );
+          getCardCheckList(id);
+        // setListOfCards([...listOfCards, data]);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const getCardCheckList = async(id) => {
+      try {
+        const {data} = await axios.get(`https://api.trello.com/1/cards/${id}/checklists?key=${APIKey}&token=${APIToken}`)
+        setCheckLists(data);
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    if (getCheckListName.id?.length > 0) {
+      postNewCardCheckList(getCheckListName);
+    }
+  }, [getCheckListName]);
+
+
+
   const delCardfromList = (id) => {
     setDelCards(id);
   };
@@ -109,8 +141,8 @@ const TrelloCardDetails = ({ list, deleteList, invoker }) => {
 
   // for checklist
 
-  const addCheckList = (checkList) => {
-    console.log(checkList);
+  const addCheckList = (name, id) => {
+    setCheckListsName({name, id});
   }
 
 
@@ -132,7 +164,7 @@ const TrelloCardDetails = ({ list, deleteList, invoker }) => {
         
       {listOfCards?.length > 0 &&
         listOfCards.map(({ name, id }) => (
-          <TrelloCard key={id} name={name} id={id} delCardfromList={delCardfromList} addCheckList={addCheckList}/>
+          <TrelloCard key={id} name={name} id={id} delCardfromList={delCardfromList} getCheckList={getCheckList} addCheckList={addCheckList}/>
         ))}
 
       {addCardActive ? (
