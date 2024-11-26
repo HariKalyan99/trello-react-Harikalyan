@@ -17,7 +17,7 @@ const CheckItem = ({deleteCheckItem, name, id, state, updateCheckItem}) => {
   return (
     <Space className="flex">
     <Checkbox  onChange={onChecked} checked={getCheckedVal === "complete"} >
-      {name}
+      <span className={`${getCheckedVal === "complete" && "line-through"}`}>{name}</span>
     </Checkbox>
     <MdDeleteOutline className="text-red-400 hover:text-red-700 cursor-pointer" onClick={(e) => {
         e.preventDefault();

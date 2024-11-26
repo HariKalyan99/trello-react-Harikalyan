@@ -120,10 +120,10 @@ const TrelloCheckListSpace = ({ name, id, deleteCheckList, cardId, checkListArra
         <Col span={24}>
           <Slider
             min={0}
-            max={checkItems?.length + 1}
+            max={checkItems?.length}
             value={
               checkItems?.filter((x) => x.state === "complete")?.length > 0
-                ? checkItems?.filter((x) => x.state === "complete")?.length + 1
+                ? checkItems?.filter((x) => x.state === "complete")?.length 
                 : 0
             }
           />
@@ -186,7 +186,7 @@ const TrelloCheckListSpace = ({ name, id, deleteCheckList, cardId, checkListArra
           </button>
           <button
             type="button"
-            className="bg-red-400 hover:bg-red-700 w-[150px] text-sm rounded text-white h-[2rem]"
+            className="bg-red-300 hover:bg-red-500 w-[150px] text-sm rounded text-white h-[2rem]"
             onClick={() => deleteCheckList(id)}
           >
             Delete
