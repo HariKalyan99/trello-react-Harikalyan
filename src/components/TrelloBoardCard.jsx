@@ -125,7 +125,7 @@ const TrelloBoardCard = ({ checklistActive, addCheckList }) => {
               onClick={() => setBoardPopOpen(true)}
             >
               
-              <span className="text-lg w-[100%] h-full text-white flex justify-center items-center gap-2">
+              <span className="text-lg w-[100%] h-full text-black flex justify-center items-center gap-2">
               <GoChecklist className="text-slate-900"/> Add Checklist
               </span>
             </Card>

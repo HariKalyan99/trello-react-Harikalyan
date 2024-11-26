@@ -1,20 +1,17 @@
 import { Space } from "antd";
 import React, { useState } from "react";
-import TrelloChecklistModal from "../common/TrelloChecklistModal";
 import { MdCancelPresentation } from "react-icons/md";
+import TrelloChecklistModal from "./TrelloChecklistModal";
 
 
 const TrelloCard = ({ id, name, delCardfromList, addCheckList }) => {
   const [modalOpen, setModalOpen] = useState(false);
 
-  const [inputValue, setInputValue] = useState(1);
 
   // const 
   return (
     <>
       <TrelloChecklistModal
-        inputValue={inputValue}
-        setInputValue={setInputValue}
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
         name={name}

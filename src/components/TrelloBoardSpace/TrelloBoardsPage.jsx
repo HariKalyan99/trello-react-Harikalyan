@@ -52,7 +52,7 @@ const TrelloBoardsPage = () => {
         if (error.name === "AbortError") {
           console.log("Fetch aborted");
         } else {
-          console.error(error);
+          console.warn(error);
         }
       }
     };
@@ -75,7 +75,7 @@ const TrelloBoardsPage = () => {
         if (error.name === "AbortError") {
           console.log("Fetch aborted");
         } else {
-          console.error(error);
+          console.warn(error);
         }
       }
     };
@@ -103,7 +103,7 @@ const TrelloBoardsPage = () => {
         if (error.name === "AbortError") {
           console.log("Fetch aborted");
         } else {
-          console.error(error);
+          console.warn(error);
         }
       }
     };

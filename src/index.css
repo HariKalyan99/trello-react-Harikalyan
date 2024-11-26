@@ -13,7 +13,7 @@
 }
 
 .scrollableFlex::-webkit-scrollbar { 
-  /* display: none;   */
+  display: none;  
   /* Safari and Chrome */
 }
 

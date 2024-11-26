@@ -27,7 +27,6 @@ function pureBoardReducerFn(currentBoardList, action) {
 }
 
 
-///////////////////////////////////change this
 let APIKey = import.meta.env.VITE_APIKEY;
 let APIToken = import.meta.env.VITE_APITOKEN;
 
@@ -69,7 +68,7 @@ const TrelloStoreProvider = ({ children }) => {
         if (error.name === "AbortError") {
           console.log("Fetch aborted");
         } else {
-          console.error(error);
+          console.warn(error);
         }
       }
     };

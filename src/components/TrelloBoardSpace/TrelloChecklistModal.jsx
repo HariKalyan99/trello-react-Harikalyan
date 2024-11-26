@@ -1,25 +1,21 @@
 import { Modal, Space } from "antd";
 import React, { useContext } from "react";
-import { Col, InputNumber, Row, Slider } from "antd";
 import TrelloBoardCard from "../TrelloBoardCard";
 import { boardStore } from "../../store/TrelloStoreProvider";
+import TrelloCheckListSpace from "../TrelloCheckListSpace/TrelloCheckListSpace";
 
 const TrelloChecklistModal = ({
   modalOpen,
   setModalOpen,
-  inputValue,
-  setInputValue,
   name,
   addCheckList
 }) => {
   const {setBoardPopOpen} = useContext(boardStore);
-  const onChange = (newValue) => {
-    setInputValue(newValue);
-  };
+  
 
   return (
     <Modal
-      title={`Card name: ${name}`}
+      title={`Card Description: ${name}`}
       centered
       open={modalOpen}
       onOk={() => {
@@ -30,29 +26,15 @@ const TrelloChecklistModal = ({
         setModalOpen(false)
       }}
     >
-      <Row>
-        <Col span={12}>
-          <Slider
-            min={1}
-            max={20}
-            onChange={onChange}
-            value={typeof inputValue === "number" ? inputValue : 0}
-          />
-        </Col>
-        <Col span={4}>
-          <InputNumber
-            min={1}
-            max={20}
-            style={{
-              margin: "0 16px",
-            }}
-            value={inputValue}
-            onChange={onChange}
-          />
-        </Col>
-      </Row>
-
       <TrelloBoardCard checklistActive addCheckList={addCheckList}/>
+
+      <Space className="max-h-[100%] h-auto flex flex-col items-start my-5 w-full">
+      
+      {[1,2,4,5,6].map((_,ind) => <TrelloCheckListSpace key={ind}/>)}
+
+      </Space>
+      
+
     
     </Modal>
   );
