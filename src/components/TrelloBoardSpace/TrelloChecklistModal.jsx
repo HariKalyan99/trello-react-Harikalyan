@@ -16,7 +16,8 @@ const TrelloChecklistModal = ({
   name,
   addCheckList,
   cardId,
-  getCheckList
+  getCheckList,
+
 }) => {
   const {setBoardPopOpen} = useContext(boardStore);
   const [checkListArray, setChecklistArray] = useState(getCheckList);

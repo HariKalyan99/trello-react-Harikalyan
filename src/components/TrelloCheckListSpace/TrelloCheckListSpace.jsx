@@ -8,7 +8,7 @@ import CheckItem from "./CheckItem";
 let APIKey = import.meta.env.VITE_APIKEY;
 let APIToken = import.meta.env.VITE_APITOKEN;
 
-const TrelloCheckListSpace = ({ name, id, deleteCheckList, cardId }) => {
+const TrelloCheckListSpace = ({ name, id, deleteCheckList, cardId}) => {
   const [checkItems, setCheckItems] = useState([]);
   const [getCheckItem, setCheckItem] = useState("");
   const [getDelCheckItem, setDelCheckItem] = useState("");
@@ -79,6 +79,10 @@ const TrelloCheckListSpace = ({ name, id, deleteCheckList, cardId }) => {
     const putCheckItem = async({checkItemId, state, cardId}) => {
         try {
         const {data} = await axios.put(`https://api.trello.com/1/cards/${cardId}/checkItem/${checkItemId}?key=${APIKey}&token=${APIToken}&state=${state}`);
+        // setCheckItemDone(({completed, total}) => {
+        //     completed = checkItems.filter(x => x.state === "completed").length;
+        //     total = checkItems.length;
+        // })
         let findIndex = checkItems.findIndex(x => x.id === checkItemId);
         checkItems[findIndex] = data;
         setCheckItems([...checkItems])

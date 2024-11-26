@@ -7,7 +7,8 @@ import { IoTrashBinSharp } from "react-icons/io5";
 import { MdCancel } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
-import { GoChecklist } from "react-icons/go";import { MdCancelScheduleSend } from "react-icons/md";
+import { GoChecklist } from "react-icons/go";
+import { MdCancelScheduleSend } from "react-icons/md";
 
 const TrelloBoardCard = ({ checklistActive, addCheckList, id }) => {
   const { boardList, addBoardFn, delBoardFn, skeletonLoad,boardPopOpen, setBoardPopOpen } =
