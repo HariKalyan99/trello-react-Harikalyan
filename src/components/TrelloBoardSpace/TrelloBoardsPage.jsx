@@ -3,7 +3,7 @@ import React, { useEffect, useReducer, useRef, useState } from "react";
 import { Flex, Space } from "antd";
 import {  useParams } from "react-router-dom";
 import axios from "axios";
-import TrelloCardDetails from "./TrelloCardDetails";
+import TrelloCardDetails from "../TrelloCard/TrelloCardDetails";
 import { IoAdd } from "react-icons/io5";
 import { MdOutlineCancelScheduleSend } from "react-icons/md";
 import TrelloNavigation from "../TrelloNavigation";

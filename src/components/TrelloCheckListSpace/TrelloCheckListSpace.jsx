@@ -29,7 +29,6 @@ const TrelloCheckListSpace = ({ name, id, deleteCheckList, cardId, checkListArra
           `https://api.trello.com/1/checklists/${id}/checkItems?key=${APIKey}&token=${APIToken}`
         );
         if (data?.length > 0) {
-          console.log(data);
           setCheckItems(data);
         }
       } catch (error) {

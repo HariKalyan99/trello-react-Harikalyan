@@ -2,7 +2,7 @@ import { Modal, Space } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import TrelloBoardCard from "../TrelloBoardCard";
 import { boardStore } from "../../store/TrelloStoreProvider";
-import TrelloCheckListSpace from "../TrelloCheckListSpace/TrelloCheckListSpace";
+import TrelloCheckListSpace from "./TrelloCheckListSpace";
 import axios from "axios";
 
 let APIKey = import.meta.env.VITE_APIKEY;
@@ -20,7 +20,7 @@ const TrelloChecklistModal = ({
 
 }) => {
   const {setBoardPopOpen} = useContext(boardStore);
-  const [checkListArray, setChecklistArray] = useState(getCheckList);
+  const [checkListArray, setChecklistArray] = useState([]);
   const [getDeleteCheckList, setDeleteCheckList] = useState("");
  
 
@@ -46,7 +46,7 @@ const TrelloChecklistModal = ({
     const delCardCheckList = async(id) => {
       try {
         await axios.delete(`https://api.trello.com/1/checklists/${id}?key=${APIKey}&token=${APIToken}`)
-        setChecklistArray([...checkListArray.filter(x => x.id !== id)]);
+        setChecklistArray(checkListArray.filter(x => x.id !== id));
       } catch (error) {
         console.log(error)
       }
@@ -85,7 +85,7 @@ const TrelloChecklistModal = ({
 
       <Space className="max-h-[100%] h-auto flex flex-col items-start my-5 w-full">
       
-      {checkListArray?.length > 0 && checkListArray?.map(({id, name},ind) => <TrelloCheckListSpace checkListArray={checkListArray} cardId={cardId} deleteCheckList={deleteCheckList} id={id} name={name} key={ind}/>)}
+      {checkListArray && checkListArray?.map(({id, name},ind) => <TrelloCheckListSpace checkListArray={checkListArray} cardId={cardId} deleteCheckList={deleteCheckList} id={id} name={name} key={ind}/>)}
 
       </Space>
       

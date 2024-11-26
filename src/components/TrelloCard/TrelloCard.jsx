@@ -1,7 +1,7 @@
 import { Space } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { MdCancelPresentation } from "react-icons/md";
-import TrelloChecklistModal from "./TrelloChecklistModal";
+import TrelloChecklistModal from "../TrelloCheckListSpace/TrelloChecklistModal";
 import { GoChecklist } from "react-icons/go";
 import axios from "axios";
 
