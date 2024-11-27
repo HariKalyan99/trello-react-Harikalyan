@@ -177,6 +177,7 @@ const TrelloCheckListSpace = ({
               className="w-[100%] p-3 border-4"
               placeholder="Add a check item"
               ref={checkItemRef}
+              required
             />
             <Space className="flex">
               <button
