@@ -1,4 +1,4 @@
-import { Popconfirm, Space, Tooltip } from "antd";
+import { Popconfirm, Skeleton, Space, Tooltip } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { IoAdd } from "react-icons/io5";
 import { MdOutlineCancelScheduleSend } from "react-icons/md";
@@ -10,13 +10,20 @@ import { MdArchive } from "react-icons/md";
 let APIKey = import.meta.env.VITE_APIKEY;
 let APIToken = import.meta.env.VITE_APITOKEN;
 
-const TrelloCardDetails = ({ list, deleteList,deleteCardsOfLists, invokerArchive }) => {
+const TrelloCardDetails = ({
+  list,
+  deleteList,
+  deleteCardsOfLists,
+  invokerArchive,
+  archiveListOfCardsId,
+}) => {
   const [addCardActive, setAddCardActive] = useState(false);
   const [listOfCards, setListOfCards] = useState([]);
   const [cards, setCards] = useState([]);
   const [delCards, setDelCards] = useState("");
   const [getCheckListName, setCheckListsName] = useState("");
   const [getCheckList, setCheckLists] = useState([]);
+  const [makeSkeletonActive, setMakeSkeletonActive] = useState(false);
 
   const addCardRef = useRef("");
   useEffect(() => {
@@ -25,11 +32,12 @@ const TrelloCardDetails = ({ list, deleteList,deleteCardsOfLists, invokerArchive
 
     const fetchCardsById = async (listId) => {
       try {
+        setMakeSkeletonActive(true);
         const { data } = await axios.get(
           `https://api.trello.com/1/lists/${listId}/cards?key=${APIKey}&token=${APIToken}`,
           { signal }
         );
-
+        setMakeSkeletonActive(false);
         setListOfCards(data);
       } catch (error) {
         if (error.name === "AbortError") {
@@ -47,14 +55,50 @@ const TrelloCardDetails = ({ list, deleteList,deleteCardsOfLists, invokerArchive
     return () => {
       controller.abort();
     };
+  }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const { signal } = controller;
+
+    const fetchCardsById = async (listId) => {
+      try {
+        setMakeSkeletonActive(true);
+        const { data } = await axios.get(
+          `https://api.trello.com/1/lists/${listId}/cards?key=${APIKey}&token=${APIToken}`,
+          { signal }
+        );
+        setMakeSkeletonActive(false);
+        setListOfCards(data);
+      } catch (error) {
+        if (error.name === "AbortError") {
+          console.log("Fetch aborted");
+        } else {
+          console.warn(error);
+        }
+      }
+    };
+
+    if (list.id === archiveListOfCardsId) {
+      fetchCardsById(archiveListOfCardsId);
+    }
+
+    return () => {
+      controller.abort();
+    };
   }, [invokerArchive]);
 
   useEffect(() => {
     const postNewCard = async ({ name, id }) => {
       try {
+        setMakeSkeletonActive(true);
+
         const { data } = await axios.post(
           `https://api.trello.com/1/cards?idList=${id}&name=${name}&key=${APIKey}&token=${APIToken}`
         );
+
+        setMakeSkeletonActive(false);
+
         setListOfCards([...listOfCards, data]);
       } catch (error) {
         if (error.name === "AbortError") {
@@ -73,9 +117,14 @@ const TrelloCardDetails = ({ list, deleteList,deleteCardsOfLists, invokerArchive
   useEffect(() => {
     const delCard = async (id) => {
       try {
+        setMakeSkeletonActive(true);
+
         await axios.delete(
           `https://api.trello.com/1/cards/${id}?key=${APIKey}&token=${APIToken}`
         );
+
+        setMakeSkeletonActive(false);
+
         setListOfCards(listOfCards.filter((x) => x.id !== id));
       } catch (error) {
         if (error.name === "AbortError") {
@@ -97,6 +146,7 @@ const TrelloCardDetails = ({ list, deleteList,deleteCardsOfLists, invokerArchive
         const { data } = await axios.post(
           `https://api.trello.com/1/checklists?idCard=${id}&name=${name}&key=${APIKey}&token=${APIToken}`
         );
+
         setCheckLists(data);
       } catch (error) {
         console.error(error);
@@ -140,20 +190,22 @@ const TrelloCardDetails = ({ list, deleteList,deleteCardsOfLists, invokerArchive
         >
           <BsThreeDots className="text-base cursor-pointer hover:text-slate-600" />
         </Popconfirm>
-
       </Space>
 
-      {listOfCards?.length > 0 &&
-        listOfCards.map(({ name, id }) => (
-          <TrelloCard
-            key={id}
-            name={name}
-            id={id}
-            delCardfromList={delCardfromList}
-            getCheckList={getCheckList}
-            addCheckList={addCheckList}
-          />
-        ))}
+      {listOfCards?.length > 0 && makeSkeletonActive === false
+        ? listOfCards.map(({ name, id }) => (
+            <TrelloCard
+              key={id}
+              name={name}
+              id={id}
+              delCardfromList={delCardfromList}
+              getCheckList={getCheckList}
+              addCheckList={addCheckList}
+            />
+          ))
+        : makeSkeletonActive === true && (
+            <Skeleton.Node active style={{ width: 260, height: 35 }} />
+          )}
 
       {addCardActive ? (
         <form
@@ -180,23 +232,25 @@ const TrelloCardDetails = ({ list, deleteList,deleteCardsOfLists, invokerArchive
             >
               <MdOutlineCancelScheduleSend className="hover:text-xl cursor-pointer text-red-500" />
             </span>
-
           </Space>
         </form>
       ) : (
-        <Space
-          className="w-[300px] h-full flex justify-between"
-          
-        >
+        <Space className="w-[300px] h-full flex justify-between">
           <Space className="flex">
-          <IoAdd size={25} />
-          <span className="text-lg hover:text-slate-500 cursor-pointer" onClick={() => setAddCardActive(!addCardActive)}>
-            {" "}
-            Add a card
-          </span>
+            <IoAdd size={25} />
+            <span
+              className="text-lg hover:text-slate-500 cursor-pointer"
+              onClick={() => setAddCardActive(!addCardActive)}
+            >
+              {" "}
+              Add a card
+            </span>
           </Space>
           <Tooltip title="Archive all the cards">
-          <MdArchive className="text-lg hover:text-slate-500 cursor-pointer" onClick={() => deleteCardsOfLists(list.id)}/>
+            <MdArchive
+              className="text-lg hover:text-slate-500 cursor-pointer"
+              onClick={() => deleteCardsOfLists(list.id)}
+            />
           </Tooltip>
         </Space>
       )}

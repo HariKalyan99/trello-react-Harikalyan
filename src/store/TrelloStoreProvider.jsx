@@ -81,9 +81,12 @@ const TrelloStoreProvider = ({ children }) => {
   useEffect(() => {
     const postNewBoard = async (name) => {
       try {
+        setSkeletonLoad(true);
         const { data } = await axios.post(
           `https://api.trello.com/1/boards/?name=${name}&key=${APIKey}&token=${APIToken}`
         );
+        setSkeletonLoad(false);
+
         dispatchBoardReducerFn({
           type: "ADD_BOARD",
           payload: {
@@ -103,9 +106,13 @@ const TrelloStoreProvider = ({ children }) => {
   useEffect(() => {
     const delBoardById = async (id) => {
       try {
+        setSkeletonLoad(true);
+
         await axios.delete(
           `https://api.trello.com/1/boards/${id}?key=${APIKey}&token=${APIToken}`
         );
+        setSkeletonLoad(false);
+
         dispatchBoardReducerFn({
           type: "DEL_BOARD",
           payload: {

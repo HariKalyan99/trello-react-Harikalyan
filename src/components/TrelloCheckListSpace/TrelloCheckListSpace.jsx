@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Flex, Space } from "antd";
+import { Flex, Space, Spin } from "antd";
 import { GoChecklist } from "react-icons/go";
 import { MdOutlineCancel } from "react-icons/md";
 import axios from "axios";
@@ -20,6 +20,7 @@ const TrelloCheckListSpace = ({
   const [getCheckItem, setCheckItem] = useState("");
   const [getDelCheckItem, setDelCheckItem] = useState("");
   const [getUpdateCheckItem, setUpdateCheckItem] = useState("");
+  const [itemSpinShow, setItemSpinShow] = useState(false);
 
   const [displayCheck, setDisplayCheck] = useState(false);
 
@@ -47,9 +48,12 @@ const TrelloCheckListSpace = ({
   useEffect(() => {
     const postCheckItem = async ({ id, name }) => {
       try {
+        setItemSpinShow(true);
         const { data } = await axios.post(
           `https://api.trello.com/1/checklists/${id}/checkItems?name=${name}&key=${APIKey}&token=${APIToken}`
         );
+        setItemSpinShow(false);
+
         setCheckItems([...checkItems, data]);
       } catch (error) {
         console.log(error);
@@ -64,9 +68,13 @@ const TrelloCheckListSpace = ({
   useEffect(() => {
     const deleteCheckItem = async (idCheckItem) => {
       try {
+        setItemSpinShow(true);
+
         await axios.delete(
           `https://api.trello.com/1/checklists/${id}/checkItems/${idCheckItem}?key=${APIKey}&token=${APIToken}`
         );
+        setItemSpinShow(false);
+
         setCheckItems(checkItems.filter((x) => x.id !== idCheckItem));
       } catch (error) {
         console.log(error);
@@ -81,11 +89,15 @@ const TrelloCheckListSpace = ({
   useEffect(() => {
     const putCheckItem = async ({ checkItemId, state, cardId }) => {
       try {
+        setItemSpinShow(true);
+
         const { data } = await axios.put(
           `https://api.trello.com/1/cards/${cardId}/checkItem/${checkItemId}?key=${APIKey}&token=${APIToken}&state=${state}`
         );
         let findIndex = checkItems.findIndex((x) => x.id === checkItemId);
         checkItems[findIndex] = data;
+        setItemSpinShow(false);
+
         setCheckItems([...checkItems]);
       } catch (error) {
         console.log(error);
@@ -133,21 +145,8 @@ const TrelloCheckListSpace = ({
           type="line"
           strokeColor={progressColors}
         />
+        <Spin spinning={itemSpinShow} delay={500} size="small"></Spin>
       </Flex>
-
-      {/* <Row className="w-[400px]">
-        <Col span={24}>
-          <Slider
-            min={0}
-            max={checkItems?.length}
-            value={
-              checkItems?.filter((x) => x.state === "complete")?.length > 0
-                ? checkItems?.filter((x) => x.state === "complete")?.length
-                : 0
-            }
-          />
-        </Col>
-      </Row> */}
 
       {checkItems?.length > 0 &&
         checkItems?.map(({ id, name, state }) => (

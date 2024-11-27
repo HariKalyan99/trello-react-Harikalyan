@@ -1,5 +1,5 @@
-import { Checkbox, Space } from "antd";
-import React, { useState } from "react";
+import { Checkbox, Space, Spin } from "antd";
+import React, { useEffect, useState } from "react";
 import { MdDeleteOutline } from "react-icons/md";
 
 const CheckItem = ({ deleteCheckItem, name, id, state, updateCheckItem }) => {
@@ -26,6 +26,7 @@ const CheckItem = ({ deleteCheckItem, name, id, state, updateCheckItem }) => {
           deleteCheckItem(id);
         }}
       />
+     
     </Space>
   );
 };

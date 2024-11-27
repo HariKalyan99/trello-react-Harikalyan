@@ -29,6 +29,7 @@ const TrelloBoardsPage = () => {
   // const [lists, setLists] = useState([]);
   const [archiveList, setArchiveList] = useState("");
   const [archiveListOfCards, setarchiveListOfCards] = useState("");
+  const [archiveListOfCardsId, setarchiveListOfCardsId] = useState("");
 
   const [invoker, setInvoker] = useState(false);
   const [invokerArchive, setInvokerArchive] = useState(false);
@@ -75,6 +76,7 @@ const TrelloBoardsPage = () => {
           `https://api.trello.com/1/lists/${id}/archiveAllCards?key=${APIKey}&token=${APIToken}`
         );
         if (data.status === 200) {
+          setarchiveListOfCardsId(id);
           setInvokerArchive(!invokerArchive);
         }
       } catch (error) {
@@ -90,7 +92,6 @@ const TrelloBoardsPage = () => {
       archiveAllCards(archiveListOfCards);
     }
   }, [archiveListOfCards]);
-
 
   useEffect(() => {
     const archiveListFn = async (id) => {
@@ -114,7 +115,6 @@ const TrelloBoardsPage = () => {
       archiveListFn(archiveList);
     }
   }, [archiveList]);
-
 
   useEffect(() => {
     const postNewList = async (name) => {
@@ -167,6 +167,7 @@ const TrelloBoardsPage = () => {
           {lists?.length > 0 &&
             lists?.map((list, ind) => (
               <TrelloCardDetails
+                archiveListOfCardsId={archiveListOfCardsId}
                 deleteList={deleteList}
                 key={list.id}
                 list={list}

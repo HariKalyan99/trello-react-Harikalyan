@@ -1,4 +1,4 @@
-import { Modal, Space } from "antd";
+import { Modal, Space, Spin } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import TrelloBoardCard from "../TrelloBoardCard";
 import { boardStore } from "../../store/TrelloStoreProvider";
@@ -19,6 +19,7 @@ const TrelloChecklistModal = ({
   const { setBoardPopOpen } = useContext(boardStore);
   const [checkListArray, setChecklistArray] = useState([]);
   const [getDeleteCheckList, setDeleteCheckList] = useState("");
+  const [spinShow, setSpinShow] = useState(false);
 
   useEffect(() => {
     const getCardCheckList = async (id) => {
@@ -40,9 +41,12 @@ const TrelloChecklistModal = ({
   useEffect(() => {
     const delCardCheckList = async (id) => {
       try {
+        setSpinShow(true);
         await axios.delete(
           `https://api.trello.com/1/checklists/${id}?key=${APIKey}&token=${APIToken}`
         );
+        setSpinShow(false);
+
         setChecklistArray(checkListArray.filter((x) => x.id !== id));
       } catch (error) {
         console.log(error);
@@ -77,19 +81,20 @@ const TrelloChecklistModal = ({
         addCheckList={addCheckList}
         id={cardId}
       />
-
       <Space className="max-h-[100%] h-auto flex flex-col items-start my-5 w-full">
-        {checkListArray &&
-          checkListArray?.map(({ id, name }, ind) => (
-            <TrelloCheckListSpace
-              checkListArray={checkListArray}
-              cardId={cardId}
-              deleteCheckList={deleteCheckList}
-              id={id}
-              name={name}
-              key={ind}
-            />
-          ))}
+        <Spin spinning={spinShow} delay={500}>
+          {checkListArray &&
+            checkListArray?.map(({ id, name }, ind) => (
+              <TrelloCheckListSpace
+                checkListArray={checkListArray}
+                cardId={cardId}
+                deleteCheckList={deleteCheckList}
+                id={id}
+                name={name}
+                key={ind}
+              />
+            ))}
+        </Spin>
       </Space>
     </Modal>
   );
