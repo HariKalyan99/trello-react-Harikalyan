@@ -173,7 +173,7 @@ const TrelloBoardCard = ({ checklistActive, addCheckList, id }) => {
             </Popover>
           </Tooltip>
           {skeletonLoad === true
-            ? [1, 2, 3, 4].map((num, ind) => (
+            ? [1, 2, 3, 4, 5, 6, 7].map((num, ind) => (
                 <Skeleton.Node
                   key={ind}
                   active
@@ -193,7 +193,7 @@ const TrelloBoardCard = ({ checklistActive, addCheckList, id }) => {
                     <Tooltip placement="top" title={`remove "${name}"`}>
                       <Space className="absolute top-2 right-3">
                         <IoTrashBinSharp
-                          className="text-white text-xl hover:text-red-200"
+                          className="text-white text-xl hover:text-red-400"
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
