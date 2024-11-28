@@ -10,13 +10,8 @@ import { MdCancelScheduleSend } from "react-icons/md";
 import BoardCard from "./BoardCard";
 
 const TrelloBoardCard = ({ checklistActive, addCheckList, id }) => {
-  const {
-    boardList,
-    addBoardFn,
-    skeletonLoad,
-    boardPopOpen,
-    setBoardPopOpen,
-  } = useContext(boardStore);
+  const { boardList, addBoardFn, skeletonLoad, boardPopOpen, setBoardPopOpen } =
+    useContext(boardStore);
   // const [boardPopOpen, setBoardPopOpen] = useState(false);
 
   const boardRef = useRef("");
@@ -40,8 +35,6 @@ const TrelloBoardCard = ({ checklistActive, addCheckList, id }) => {
   //       pointAtCenter: true,
   //     };
   //   }, [arrow]);
-
- 
 
   const handleSubmitChecklist = (e) => {
     e.preventDefault();
@@ -126,8 +119,6 @@ const TrelloBoardCard = ({ checklistActive, addCheckList, id }) => {
             open={boardPopOpen}
             placement="left"
           >
-                  
-
             <Card
               hoverable
               className="h-[40px] w-[200px] flex justify-center items-center bg-slate-500"
@@ -176,7 +167,7 @@ const TrelloBoardCard = ({ checklistActive, addCheckList, id }) => {
               ))
             : boardList.map(({ name, id }) => (
                 <Link to={`/boards/${id}`} key={id}>
-                  <BoardCard name={name} id={id}/>
+                  <BoardCard name={name} id={id} />
                 </Link>
               ))}
         </Flex>
