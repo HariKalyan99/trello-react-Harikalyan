@@ -1,20 +1,18 @@
-import React, { useContext, useRef, useState } from "react";
-import { Flex, Card, Button, Tooltip, Space, Popover } from "antd";
-import { MdOutlineGroup } from "react-icons/md";
+import React, { useContext, useRef } from "react";
+import { Flex, Card, Button, Tooltip, Space, Popover, Spin } from "antd";
 import { boardStore } from "../store/TrelloStoreProvider";
 import { Skeleton } from "antd";
-import { IoTrashBinSharp } from "react-icons/io5";
 import { MdCancel } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 import { GoChecklist } from "react-icons/go";
 import { MdCancelScheduleSend } from "react-icons/md";
+import BoardCard from "./BoardCard";
 
 const TrelloBoardCard = ({ checklistActive, addCheckList, id }) => {
   const {
     boardList,
     addBoardFn,
-    delBoardFn,
     skeletonLoad,
     boardPopOpen,
     setBoardPopOpen,
@@ -43,13 +41,7 @@ const TrelloBoardCard = ({ checklistActive, addCheckList, id }) => {
   //     };
   //   }, [arrow]);
 
-  const cardBack = {
-    backgroundImage:
-      'linear-gradient(180deg,rgba(53, 68, 99, 0.6),rgba(53, 68, 99, 0.4)), url("https://images.unsplash.com/photo-1557626204-59dd03fd2d31?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8OHx8fGVufDB8fHx8fA%3D%3D")',
-    backgroundPosition: "10%",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-  };
+ 
 
   const handleSubmitChecklist = (e) => {
     e.preventDefault();
@@ -134,6 +126,8 @@ const TrelloBoardCard = ({ checklistActive, addCheckList, id }) => {
             open={boardPopOpen}
             placement="left"
           >
+                  
+
             <Card
               hoverable
               className="h-[40px] w-[200px] flex justify-center items-center bg-slate-500"
@@ -182,27 +176,7 @@ const TrelloBoardCard = ({ checklistActive, addCheckList, id }) => {
               ))
             : boardList.map(({ name, id }) => (
                 <Link to={`/boards/${id}`} key={id}>
-                  <Card
-                    hoverable
-                    style={cardBack}
-                    className="h-[90px] w-[250px] flex justify-between items-start bg-slate-500 flex-col relative"
-                  >
-                    <span className="text-lg w-[100%] text-white">{name}</span>
-                    <MdOutlineGroup className="text-sm text-slate-100" />
-
-                    <Tooltip placement="top" title={`remove "${name}"`}>
-                      <Space className="absolute top-2 right-3">
-                        <IoTrashBinSharp
-                          className="text-white text-xl hover:text-red-400"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            delBoardFn(id);
-                          }}
-                        />
-                      </Space>
-                    </Tooltip>
-                  </Card>
+                  <BoardCard name={name} id={id}/>
                 </Link>
               ))}
         </Flex>

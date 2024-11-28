@@ -9,6 +9,9 @@ export const boardStore = createContext({
   setSkeletonLoad: () => {},
   boardPopOpen: false,
   setBoardPopOpen: () => {},
+  boardSpinShow: false,
+  boardSpinId: "",
+  createBoardSpinShow: false
 });
 
 function pureBoardReducerFn(currentBoardList, action) {
@@ -36,6 +39,9 @@ const TrelloStoreProvider = ({ children }) => {
   const [deleteBoard, setDeleteBoard] = useState("");
   const [skeletonLoad, setSkeletonLoad] = useState(false);
   const [boardPopOpen, setBoardPopOpen] = useState(false);
+  const [boardSpinShow, setBoardSpinShow] = useState(false);
+  const [boardSpinId, setBoardSpinId] = useState("");
+  const [createBoardSpinShow, setCreateBoardSpinShow] = useState(false);
   const [boardList, dispatchBoardReducerFn] = useReducer(
     pureBoardReducerFn,
     []
@@ -81,11 +87,11 @@ const TrelloStoreProvider = ({ children }) => {
   useEffect(() => {
     const postNewBoard = async (name) => {
       try {
-        setSkeletonLoad(true);
+setCreateBoardSpinShow(true);
         const { data } = await axios.post(
           `https://api.trello.com/1/boards/?name=${name}&key=${APIKey}&token=${APIToken}`
         );
-        setSkeletonLoad(false);
+        setCreateBoardSpinShow(false);
 
         dispatchBoardReducerFn({
           type: "ADD_BOARD",
@@ -106,13 +112,13 @@ const TrelloStoreProvider = ({ children }) => {
   useEffect(() => {
     const delBoardById = async (id) => {
       try {
-        setSkeletonLoad(true);
+        setBoardSpinId(id);
+        setBoardSpinShow(true);
 
         await axios.delete(
           `https://api.trello.com/1/boards/${id}?key=${APIKey}&token=${APIToken}`
         );
-        setSkeletonLoad(false);
-
+        setBoardSpinShow(false);
         dispatchBoardReducerFn({
           type: "DEL_BOARD",
           payload: {
@@ -146,6 +152,9 @@ const TrelloStoreProvider = ({ children }) => {
         skeletonLoad,
         boardPopOpen,
         setBoardPopOpen,
+        boardSpinShow,
+        boardSpinId,
+        createBoardSpinShow
       }}
     >
       {children}

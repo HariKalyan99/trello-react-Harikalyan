@@ -1,11 +1,13 @@
-import React from "react";
-import { Flex, Layout, Typography } from "antd";
+import React, { useContext } from "react";
+import { Flex, Layout, Spin, Typography } from "antd";
 import TrelloBoardCard from "./TrelloBoardCard";
 import TrelloNavigation from "./TrelloNavigation";
+import { boardStore } from "../store/TrelloStoreProvider";
 const { Title } = Typography;
 const { Content } = Layout;
 
 const TrelloDashboard = () => {
+  const {createBoardSpinShow} = useContext(boardStore)
   return (
     <>
       <TrelloNavigation />
@@ -22,6 +24,7 @@ const TrelloDashboard = () => {
         <Flex className="h-full w-[70%] flex justify-start items-center flex-col ">
           <Title className="text-center w-full my-3  lg:text-left">
             Boards
+            {createBoardSpinShow && <Spin spinning={createBoardSpinShow} percent={100} fullscreen /> }
           </Title>
           <TrelloBoardCard />
         </Flex>
