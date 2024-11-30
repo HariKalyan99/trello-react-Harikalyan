@@ -1,23 +1,14 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './routes/App.jsx';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import TrelloDashboard from './components/TrelloDashboard.jsx';
-import TrelloBoardsPage from './components/TrelloBoardSpace/TrelloBoardsPage.jsx';
+import App from './App.jsx';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
-const router = createBrowserRouter([
-  {
-    path: "/", element: <App />, children: [ //change to boards url
-      {path: "/", element: <TrelloDashboard />},
-      {path: "/boards/:id", element: <TrelloBoardsPage />},
-    ]
-  }
-])
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router}/>
+    {/* <RouterProvider router={router}/> */}
+    <App />
   </StrictMode>,
 )

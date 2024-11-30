@@ -1,48 +1,39 @@
 import React from "react";
-import { Avatar, Flex, Layout, Space, Tooltip } from "antd";
-const { Header } = Layout;
-import { IoReturnDownBackOutline } from "react-icons/io5";
+import { Container, Image, Navbar, Spinner, Stack } from "react-bootstrap";
+import { LuLayoutDashboard } from "react-icons/lu";
 
-import { Link } from "react-router-dom";
-
-const TrelloNavigation = ({ boardsPage }) => {
-  const linkStyle = { textDecoration: "none", color: "white" };
+const TrelloNavigation = () => {
   return (
-    <Header
-      className={`h-[3rem] text-white ${
-        boardsPage ? "bg-white" : "bg-slate-500"
-      }`}
+    <Navbar
+      variant="dark"
+      bg="dark"
+      expand="lg"
+      className={`shadow position-sticky top-8 rounded-5 ${false && "position-relative z-1"}`}
     >
-      <Flex
-        direction="vertical"
-        gap="middle"
-        justify="space-between"
-        align="center"
-        className="w-full"
-      >
-        {boardsPage && (
-          <Tooltip placement="bottom" title="Back to dashboard">
-            <Link to={"/"} style={linkStyle}>
-              <Space className="h-[2rem] w-[3rem] bg-slate-900 flex justify-center hover:bg-slate-600">
-                <IoReturnDownBackOutline className="text-xl cursor-pointer" />
-              </Space>
-            </Link>
-          </Tooltip>
-        )}
-        <Space
-          className={`h-[50px] w-[100px] ${boardsPage && "bg-black px-2"}`}
-        >
-          <img
+      <Container fluid>
+        <Navbar.Brand href="#home">
+          <Image
             src="https://trello.com/assets/87e1af770a49ce8e84e3.gif"
-            alt="trello_gif"
-            className="h-[100%] w-[100%] object-contain"
+            thumbnail
+            className="bg-transparent h-20 w-20 border border-0"
           />
-        </Space>
-        <Avatar className="bg-black" size={35}>
-          <span className="text-base">HK</span>
-        </Avatar>
-      </Flex>
-    </Header>
+        </Navbar.Brand>
+        {false ? (
+          <Stack className="border-0 border-light w-100 h-100 rounded-5 px-3 py-1 bg-secondary d-flex justify-content-end">
+            <Spinner
+              animation="grow"
+              className="w-100 h-100 d-flex justify-center"
+            >
+              <LuLayoutDashboard className="text-light fs-2" />
+            </Spinner>
+          </Stack>
+        ) : (
+          <div className="border-0 border-light w-100 h-100 rounded-5 px-3 py-1 bg-secondary d-flex justify-content-end">
+            <LuLayoutDashboard className="text-light fs-2" />
+          </div>
+        )}
+      </Container>
+    </Navbar>
   );
 };
 
