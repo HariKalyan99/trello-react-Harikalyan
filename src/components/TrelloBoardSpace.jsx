@@ -11,10 +11,10 @@ import { getAllBoards } from "../slices/boardSlice";
 
 const TrelloBoardSpace = () => {
   const { boardList } = useSelector((state) => state.boards);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getAllBoards());
-  }, [dispatch]);
+  // const dispatch = useDispatch();
+  // useEffect(() => {
+  //   dispatch(getAllBoards());
+  // }, [dispatch]);
   return (
     <Container fluid className="min-vh-100 my-5">
       <TrelloNavigation />

@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import boardReducer from '../slices/boardSlice.js';
+import boardReducer, { getAllBoards } from '../slices/boardSlice.js';
 
 
 export const trelloStore = configureStore({
@@ -7,3 +7,7 @@ export const trelloStore = configureStore({
         boards: boardReducer
     }
 })
+
+// setInterval(() => {
+    trelloStore.dispatch(getAllBoards());
+// }, 2000)
