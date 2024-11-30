@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Card, Container } from "react-bootstrap";
+import React, { useEffect, useRef, useState } from "react";
+import { Card, Container, Overlay, Popover } from "react-bootstrap";
 const boardBg = {
   backgroundColor: "rgba(255, 255, 255, 0.4)",
   boxShadow: "1px 1px 20px rgb(253, 130, 151)",
@@ -7,16 +7,42 @@ const boardBg = {
 import TrelloNavigation from "./TrelloNavigation";
 import TrelloBoardCard from "./TrelloBoardCard";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllBoards } from "../slices/boardSlice";
+import { getAllBoards, postNewBoard } from "../slices/boardSlice";
 
 const TrelloBoardSpace = () => {
+  const [show, setShow] = useState(false);
+  const [target, setTarget] = useState(null);
+  const ref = useRef(null);
+
+
+  
+  const [getName, setName] = useState("");
   const { boardList } = useSelector((state) => state.boards);
-  // const dispatch = useDispatch();
-  // useEffect(() => {
-  //   dispatch(getAllBoards());
-  // }, [dispatch]);
+  const dispatch = useDispatch();
+
+  const handleClick = (event) => {
+    setShow(!show);
+    setTarget(event.target);
+  };
+  useEffect(() => {
+    dispatch(postNewBoard());
+  }, [dispatch]);
   return (
     <Container fluid className="min-vh-100 my-5">
+      <Overlay
+        show={show}
+        target={target}
+        placement="bottom"
+        container={ref}
+        containerPadding={20}
+      >
+        <Popover id="popover-contained">
+          <Popover.Header as="h3">Popover bottom</Popover.Header>
+          <Popover.Body>
+            <TrelloNavigation />
+          </Popover.Body>
+        </Popover>
+      </Overlay>
       <TrelloNavigation />
       <Container className="vh-100 position-relative">
         <Container
@@ -39,13 +65,15 @@ const TrelloBoardSpace = () => {
         >
           <h1 className="text-decoration-underline text-left">Boards</h1>
 
-          <Container className="min-h-auto h-75 d-flex flex-wrap gap-3 justify-content-start align-items-start">
+          <Container className="min-h-auto h-75 d-flex flex-wrap gap-3 justify-content-start align-items-start" ref={ref}>
+          
             <Card
               border="light"
               style={{ width: "18rem", height: "7rem" }}
               className="card-add-hover"
+              onClick={handleClick}
             >
-              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
+              <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
                 {10 - boardList.length}
               </span>
               <Card.Body className="d-flex justify-content-center align-items-center">
