@@ -1,14 +1,18 @@
 import React from "react";
 import { Container, Image, Navbar, Spinner, Stack } from "react-bootstrap";
 import { LuLayoutDashboard } from "react-icons/lu";
+import { useSelector } from "react-redux";
 
 const TrelloNavigation = () => {
+  const { boardListPending } = useSelector((state) => state.boards);
   return (
     <Navbar
       variant="dark"
       bg="dark"
       expand="lg"
-      className={`shadow position-sticky top-8 rounded-5 ${false && "position-relative z-1"}`}
+      className={`shadow position-sticky top-8 rounded-5 ${
+        boardListPending && "position-relative z-1"
+      }`}
     >
       <Container fluid>
         <Navbar.Brand href="#home">
@@ -18,7 +22,7 @@ const TrelloNavigation = () => {
             className="bg-transparent h-20 w-20 border border-0"
           />
         </Navbar.Brand>
-        {false ? (
+        {boardListPending ? (
           <Stack className="border-0 border-light w-100 h-100 rounded-5 px-3 py-1 bg-secondary d-flex justify-content-end">
             <Spinner
               animation="grow"
