@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Card, Container, Overlay, Popover } from "react-bootstrap";
+import { Card, Container, Overlay, Popover, Spinner } from "react-bootstrap";
 const boardBg = {
   backgroundColor: "rgba(255, 255, 255, 0.4)",
   boxShadow: "1px 1px 20px rgb(253, 130, 151)",
 };
 import TrelloNavigation from "./TrelloNavigation";
 import TrelloBoardCard from "./TrelloBoardCard";
+import { MdAddCard } from "react-icons/md";
+import { TbBallpenOff } from "react-icons/tb";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllBoards, postNewBoard } from "../slices/boardSlice";
 
@@ -13,20 +15,22 @@ const TrelloBoardSpace = () => {
   const [show, setShow] = useState(false);
   const [target, setTarget] = useState(null);
   const ref = useRef(null);
+  const boardInputRef = useRef("")
 
-
-  
-  const [getName, setName] = useState("");
-  const { boardList } = useSelector((state) => state.boards);
+  const { boardList, postBoardPending, delBoardPending } = useSelector((state) => state.boards);
   const dispatch = useDispatch();
 
   const handleClick = (event) => {
     setShow(!show);
     setTarget(event.target);
   };
-  useEffect(() => {
-    dispatch(postNewBoard());
-  }, [dispatch]);
+
+  const handleBoardSubmit = (e) => {
+    e.preventDefault();
+    dispatch(postNewBoard(boardInputRef.current.value));
+    boardInputRef.current.value = "";
+    setShow(!show);
+  }
   return (
     <Container fluid className="min-vh-100 my-5">
       <Overlay
@@ -37,13 +41,21 @@ const TrelloBoardSpace = () => {
         containerPadding={20}
       >
         <Popover id="popover-contained">
-          <Popover.Header as="h3">Popover bottom</Popover.Header>
           <Popover.Body>
-            <TrelloNavigation />
+            <Container className="w-100 h-100">
+              <form id="boardForm" className="w-100 h-100 d-flex justify-content-center align-items-center gap-2" onSubmit={(e) => handleBoardSubmit(e)}>
+                <label id="boardForm"></label>
+                <input type="text" placeholder="Enter a board name" className="w-75 p-2 border" ref={boardInputRef}/>
+                <button type="submit" className="btn btn-dark"><MdAddCard /></button>
+                <button type="button" className="btn btn-dark" onClick={() => setShow(!show)}><TbBallpenOff style={{color: "rgb(245, 103, 126)"}} /></button>
+              </form>
+            </Container>
           </Popover.Body>
         </Popover>
       </Overlay>
+
       <TrelloNavigation />
+      
       <Container className="vh-100 position-relative">
         <Container
           className="w-100 d-flex justify-center align-items-center"
@@ -63,8 +75,17 @@ const TrelloBoardSpace = () => {
           className="min-h-auto h-75 w-100 d-flex flex-column gap-5 border border-light"
           style={boardBg}
         >
+          <Container fluid className="d-flex align-items-center gap-2">
           <h1 className="text-decoration-underline text-left">Boards</h1>
+          
+          {postBoardPending && <Spinner animation="grow" className="d-flex align-items-center justify-content-center" >
+          <Spinner animation="grow" size="sm"className="bg-secondary"/>
+          </Spinner>}
 
+          {delBoardPending && <Spinner animation="grow" className="d-flex align-items-center justify-content-center" >
+          <Spinner animation="grow" size="sm"className="bg-secondary"/>
+          </Spinner>}
+          </Container>
           <Container className="min-h-auto h-75 d-flex flex-wrap gap-3 justify-content-start align-items-start" ref={ref}>
           
             <Card
@@ -80,8 +101,8 @@ const TrelloBoardSpace = () => {
                 <Card.Title>Add a Board +</Card.Title>
               </Card.Body>
             </Card>
-            {boardList.map((_, ind) => (
-              <TrelloBoardCard key={ind} />
+            {boardList.map((board, ind) => (
+              <TrelloBoardCard key={ind} board={board}/>
             ))}
           </Container>
         </Container>

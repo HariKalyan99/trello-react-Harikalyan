@@ -12,6 +12,9 @@ const initialState = {
     boardListError: false,
     postBoardPending: false,
     postBoardError: false,
+    delBoardPending: false,
+    delBoardError: false,
+
 }
 
 
@@ -21,10 +24,19 @@ export const getAllBoards = createAsyncThunk('boards/getAllBoards', async() => {
 })
 
 export const postNewBoard = createAsyncThunk('boards/postNewBoard', async(name) => {
-    const {data} = await axios.get(`https://api.trello.com/1/boards/?name=${name}&key=${APIKey}&token=${APIToken}`)
+    if(name?.length > 0){
+    const {data} = await axios.post(`https://api.trello.com/1/boards/?name=${name}&key=${APIKey}&token=${APIToken}`)
     return data
+    }
 })
 
+
+export const delBoard = createAsyncThunk('boards/deleteBoard', async(id) => {
+    if(id?.length > 0){
+        axios.delete(`https://api.trello.com/1/boards/${id}?key=${APIKey}&token=${APIToken}`);
+        return id
+    }
+})
 
 const boardSlice = createSlice({
     name: "boards",
@@ -56,6 +68,20 @@ const boardSlice = createSlice({
         }).addCase(postNewBoard.rejected, (state) => {
             state.postBoardPending = false;
             state.postBoardError = true;
+        }),
+
+        builder.addCase(delBoard.pending, (state) => {
+            state.delBoardPending = true;
+            state.delBoardError = false;
+        }).addCase(delBoard.fulfilled, (state, action) => {
+            state.boardList = [
+                ...state.boardList.filter((x) => x.id !== action.payload),
+              ];
+            state.delBoardPending = false;
+            state.delBoardError = false;
+        }).addCase(delBoard.rejected, (state) => {
+            state.delBoardPending = false;
+            state.delBoardError = true;
         })
     }
 })
