@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Button, Col, Form, Image, InputGroup, ListGroup, Modal } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Form,
+  Image,
+  InputGroup,
+  ListGroup,
+  Modal,
+} from "react-bootstrap";
 import { TiDeleteOutline } from "react-icons/ti";
 import { useDispatch } from "react-redux";
 import { deleteCard } from "../../slices/boardInternalSlices/boardListSlice";
@@ -45,18 +53,28 @@ const TrelloListCard = ({ card, listId }) => {
         size="lg"
         style={{ border: "3px solid rgb(245, 103, 126)" }}
       >
-        <span class="position-absolute top-0 start-100 translate-middle p-2 bg-dark border-2 border-light rounded-circle spanHover" onClick={handleClose}>
-            <RxCross2 size={25} className="text-light" />
-      </span>
+        <span
+          class="position-absolute top-0 start-100 translate-middle p-2 bg-dark border-2 border-light rounded-circle spanHover"
+          onClick={handleClose}
+        >
+          <RxCross2 size={25} className="text-light" />
+        </span>
         <Modal.Header className="bg-dark text-white ">
           <Modal.Title>Card name: "{card.name}"</Modal.Title>
         </Modal.Header>
-        {true && <Modal.Body className="bg-dark text-white d-flex justify-content-center" style={{minHeight: "40vh"}}>
-          <Col xs={4} md={4}>
-          <Image src="https://i.pinimg.com/originals/4c/d2/e3/4cd2e3548da43baeeb65b87c7a45e554.gif" roundedCircle />
-        </Col>
-          {/* https://i.pinimg.com/originals/0f/c0/cb/0fc0cba207b7b73d554cae3ef292bc72.gif */}
-        </Modal.Body>}
+        {true && (
+          <Modal.Body
+            className="bg-dark text-white d-flex justify-content-center"
+            style={{ minHeight: "40vh" }}
+          >
+            <Col xs={4} md={4}>
+              <Image
+                src="https://i.pinimg.com/originals/4c/d2/e3/4cd2e3548da43baeeb65b87c7a45e554.gif"
+                roundedCircle
+              />
+            </Col>
+          </Modal.Body>
+        )}
         <Modal.Footer className="bg-dark text-white border-5">
           <InputGroup className="d-flex flex-column gap-3">
             <form
@@ -71,7 +89,7 @@ const TrelloListCard = ({ card, listId }) => {
                   id="inputGroup-sizing-default"
                   className="bg-dark"
                 >
-                  <TbChecklist className="text-light fs-3"   />
+                  <TbChecklist className="text-light fs-3" />
                 </InputGroup.Text>
                 <Form.Control
                   aria-label="Default"
@@ -83,8 +101,8 @@ const TrelloListCard = ({ card, listId }) => {
               <Button variant="danger" onClick={handleClose}>
                 <FaWindowClose />
               </Button>
-              <Button variant="light" type="submit" >
-                <BsUiChecks className="fs-3"/>
+              <Button variant="light" type="submit" className="checkListSubmit">
+                <BsUiChecks className="fs-3 text-black" />
               </Button>
             </form>
           </InputGroup>

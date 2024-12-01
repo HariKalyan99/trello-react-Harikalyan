@@ -106,6 +106,15 @@ body{
   cursor: pointer;
 }
 
+.checkListSubmit {
+  background-color: rgb(173, 173, 173) !important;
+}
+
+.checkListSubmit:hover {
+  box-shadow: 1px 1px 5px rgb(173, 173, 173);
+  background-color: rgb(77, 77, 77) !important;
+}
+
 @media (min-width: 300px) and (max-width: 732px) {
   .boardContainerHeight {
     height: auto !important;
