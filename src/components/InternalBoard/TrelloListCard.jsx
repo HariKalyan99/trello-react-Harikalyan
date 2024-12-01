@@ -15,6 +15,7 @@ import { BsUiChecks } from "react-icons/bs";
 import { FaWindowClose } from "react-icons/fa";
 import { TbChecklist } from "react-icons/tb";
 import { RxCross2 } from "react-icons/rx";
+import TrelloCardModal from "./InternalCard/TrelloCardModal";
 
 const TrelloListCard = ({ card, listId }) => {
   const [show, setShow] = useState(false);
@@ -62,7 +63,12 @@ const TrelloListCard = ({ card, listId }) => {
         <Modal.Header className="bg-dark text-white ">
           <Modal.Title>Card name: "{card.name}"</Modal.Title>
         </Modal.Header>
-        {true && (
+        {true ?  <Modal.Body
+            className="bg-dark text-white d-flex justify-content-center align-items-center flex-column gap-2"
+            style={{ minHeight: "40vh", height: "auto" }}
+          >
+           {[1,2,3,4,5,6].map((_, ind) => <TrelloCardModal key={ind} checkListCard/>)}
+          </Modal.Body>  : (
           <Modal.Body
             className="bg-dark text-white d-flex justify-content-center"
             style={{ minHeight: "40vh" }}
