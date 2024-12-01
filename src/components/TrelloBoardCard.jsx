@@ -20,7 +20,7 @@ const TrelloBoardCard = ({board}) => {
       >
         
           <Card.Header className="d-flex justify-content-between align-items-center">
-            Board <MdOutlineDeleteSweep className="del-hover fs-4" onClick={(e) => {
+            Board <MdOutlineDeleteSweep className="del-hover fs-3" onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               dispatch(delBoard(board.id))

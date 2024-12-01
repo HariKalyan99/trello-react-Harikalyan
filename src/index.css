@@ -69,7 +69,7 @@ body{
 }
 
 .delHover:hover{
-  color: rgb(255, 49, 49) !important;
+  color: rgb(255, 55, 55) !important;
 
 }
 
@@ -83,6 +83,9 @@ body{
   color: rgb(245, 103, 126) !important;
 }
 
+.list-group-item {
+  border-bottom: 5px solid white !important;
+}
 
 .scrollContainer::-webkit-scrollbar { 
   display: none;  
