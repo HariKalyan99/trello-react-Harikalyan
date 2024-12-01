@@ -2,6 +2,8 @@ import React from "react";
 import { Container, Image, Navbar, Spinner, Stack } from "react-bootstrap";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { useSelector } from "react-redux";
+import { GrLinkPrevious } from "react-icons/gr";
+import { Link } from "react-router-dom";
 
 const TrelloNavigation = () => {
   const { boardListPending } = useSelector((state) => state.boards);
@@ -21,7 +23,11 @@ const TrelloNavigation = () => {
             thumbnail
             className="bg-transparent h-20 w-20 border border-0"
           />
+
         </Navbar.Brand>
+        <Link to={"/board"} className="text-decoration-none">
+        <GrLinkPrevious className="text-light mr-2 fs-3 backHover"/>
+        </Link>
         {boardListPending ? (
           <Stack className="border-0 border-light w-100 h-100 rounded-5 px-3 py-1 bg-secondary d-flex justify-content-end">
             <Spinner

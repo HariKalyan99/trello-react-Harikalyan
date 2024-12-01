@@ -7,7 +7,7 @@ import {trelloStore} from './store/trelloStore.js'
 import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import TrelloBoardSpace from './components/TrelloBoardSpace.jsx';
-import TrelloBoardInternal from './components/TrelloBoardInternal.jsx';
+import TrelloBoardInternal from './components/InternalBoard/TrelloBoardInternal.jsx';
 
 
 const router = createBrowserRouter([
@@ -16,7 +16,7 @@ const router = createBrowserRouter([
       path: "/board", element: <TrelloBoardSpace />
     },
     {
-      path: "/board/:id", element: <TrelloBoardInternal />
+      path: "/board/:boardId", element: <TrelloBoardInternal />
     }
   ]}
 ])

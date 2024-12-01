@@ -92,7 +92,7 @@ const TrelloBoardSpace = () => {
           </h1>
         </Container>
         <Container
-          className="min-h-auto h-75 w-100 d-flex flex-column gap-5 border border-light boardContainerHeight"
+          className="min-h-auto w-100 d-flex flex-column gap-5 border border-light boardContainerHeight"
           style={boardBg}
         >
           <Container fluid className="d-flex align-items-center gap-2">
