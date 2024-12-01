@@ -80,7 +80,7 @@ body{
 
 .backHover:hover{
   cursor: pointer;
-  color: #777777 !important;
+  color: rgb(245, 103, 126) !important;
 }
 
 
@@ -89,6 +89,10 @@ body{
   /* Safari and Chrome */
 }
 
+.form-control:focus {
+    border-color: #ffffff !important;
+    box-shadow: 0 0 0 .15rem rgb(245, 103, 126) !important;
+}
 
 
 

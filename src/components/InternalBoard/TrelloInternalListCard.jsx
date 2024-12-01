@@ -1,18 +1,17 @@
-import React, { useEffect } from "react";
-import { Button, Card, ListGroup } from "react-bootstrap";
+import React, { useRef } from "react";
+import { Button, Card, Form, InputGroup, ListGroup } from "react-bootstrap";
 import { MdFolderDelete } from "react-icons/md";
-import { TiDeleteOutline } from "react-icons/ti";
-import { useDispatch, useSelector } from "react-redux";
-import { getAllCards } from "../../slices/boardInternalSlices/listCardSlice";
+import { useDispatch } from "react-redux";
+import {
+  addCard,
+  deleteList,
+} from "../../slices/boardInternalSlices/boardListSlice";
+import TrelloListCard from "./TrelloListCard";
+import { MdLibraryAdd } from "react-icons/md";
 
-const TrelloInternalListCard = ({list}) => {
-
-    const {cardList} = useSelector(state => state.cards);
-    const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(getAllCards(list.id));
-        console.log(cardList)
-    }, [])
+const TrelloInternalListCard = ({ list }) => {
+  const addCardRef = useRef("");
+  const dispatch = useDispatch();
   return (
     <Card
       style={{ height: "20%", minWidth: "20rem", width: "20rem" }}
@@ -20,19 +19,56 @@ const TrelloInternalListCard = ({list}) => {
     >
       <Card.Body className="d-flex flex-column gap-3">
         <Card.Title className="d-flex justify-content-between align-items-center">
-          {list.name} <div><MdFolderDelete className="fs-2 delHover" /></div>
+          {list.name}{" "}
+          <div
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              dispatch(deleteList(list.id));
+            }}
+          >
+            <MdFolderDelete className="fs-2 delHover" />
+          </div>
         </Card.Title>
-        <ListGroup>
-          <ListGroup.Item className="bg-dark text-light d-flex justify-content-between align-items-end listCardHover">
-            Cras justo odio Lorem ipsum dolor sit amet consectetur adipisicing
-            elit. Et at commodi nihil eaque alias incidunt nemo voluptas sint
-            laudantium labore?{" "}
-            <div>
-              <TiDeleteOutline className="fs-2 delHover" />
-            </div>
-          </ListGroup.Item>
-        </ListGroup>
-        <Button variant="secondary">Add card +</Button>
+        {list.cardData?.length > 0 && (
+          <ListGroup>
+            {list?.cardData.map((card) => (
+              <TrelloListCard key={card.id} card={card} listId={list.id} />
+            ))}
+          </ListGroup>
+        )}
+        <InputGroup className="d-flex flex-column gap-3">
+          <form
+            className="d-flex flex-column gap-3"
+            onSubmit={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              dispatch(
+                addCard({ listId: list.id, name: addCardRef.current.value })
+              );
+              addCardRef.current.value = "";
+            }}
+          >
+            <InputGroup className="d-flex" size="sm">
+              <InputGroup.Text
+                id="inputGroup-sizing-default"
+                className="bg-dark"
+              >
+                <MdLibraryAdd className="text-light" />
+              </InputGroup.Text>
+              <Form.Control
+                aria-label="Default"
+                aria-describedby="inputGroup-sizing-default"
+                placeholder="name your card"
+                className="bg-light"
+                ref={addCardRef}
+              />
+            </InputGroup>
+            <Button variant="secondary" type="submit">
+              Add card +
+            </Button>
+          </form>
+        </InputGroup>
       </Card.Body>
     </Card>
   );

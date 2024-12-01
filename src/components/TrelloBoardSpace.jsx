@@ -81,7 +81,7 @@ const TrelloBoardSpace = () => {
           className="w-100 d-flex justify-center align-items-center"
           style={{ height: "10rem" }}
         >
-          <h1 className="position-absolute top-10">
+          <h1 className="position-absolute top-7">
             Work
             <span
               className="position-relative z-n1"

@@ -1,32 +1,72 @@
-import React, { useEffect } from "react";
-import { Button, Card, Container } from "react-bootstrap";
+import React, { useEffect, useRef } from "react";
+import { Button, Card, Container, Form, InputGroup } from "react-bootstrap";
 import TrelloNavigation from "../TrelloNavigation";
 import TrelloInternalListCard from "./TrelloInternalListCard";
 import { useDispatch, useSelector } from "react-redux";
-import { getListsOfBoards } from "../../slices/boardInternalSlices/boardListSlice";
+import {
+  addList,
+  getListsOfBoards,
+} from "../../slices/boardInternalSlices/boardListSlice";
 import { useParams } from "react-router-dom";
+import { GrDomain } from "react-icons/gr";
 
 const TrelloBoardInternal = () => {
-  const {listsOfBoard} = useSelector(state => state.lists)
+  const addListRef = useRef("");
+  const { listsOfBoard, listsPending } = useSelector((state) => state.lists);
   const dispatch = useDispatch();
-  let {boardId} = useParams();
+  let { boardId } = useParams();
   useEffect(() => {
-    dispatch(getListsOfBoards(boardId))
-    console.log(listsOfBoard)
-  }, [dispatch])
+    dispatch(getListsOfBoards(boardId));
+  }, [dispatch]);
+
   return (
     <Container fluid className="min-vh-100 my-5">
-        <TrelloNavigation />
+      <TrelloNavigation boardIdPage />
       <div className="scrollContainer">
-      {listsOfBoard.map((list) => <TrelloInternalListCard key={list.id} list={list} />)}
-      <Card
-      style={{ height: "20%", minWidth: "20rem", width: "20rem" }}
-      className="bg-dark text-light"
-    >
-      <Card.Body className="d-flex flex-column gap-3">
-        <Button variant="secondary">Add List +</Button>
-      </Card.Body>
-    </Card>
+        {!listsPending &&
+          listsOfBoard?.length > 0 &&
+          listsOfBoard.map((list) => (
+            <TrelloInternalListCard key={list.id} list={list} />
+          ))}
+        <Card
+          style={{ height: "20%", minWidth: "20rem", width: "20rem" }}
+          className="bg-dark text-light"
+        >
+          <Card.Body>
+            <InputGroup className="d-flex flex-column gap-3">
+              <form
+                className="d-flex flex-column gap-3"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  dispatch(
+                    addList({ boardId, name: addListRef.current.value })
+                  );
+                  addListRef.current.value = "";
+                }}
+              >
+                <InputGroup className="d-flex">
+                  <InputGroup.Text
+                    id="inputGroup-sizing-default"
+                    className="bg-dark"
+                  >
+                    <GrDomain className="text-light" />
+                  </InputGroup.Text>
+                  <Form.Control
+                    aria-label="Default"
+                    aria-describedby="inputGroup-sizing-default"
+                    placeholder="name your list"
+                    className="bg-light"
+                    ref={addListRef}
+                  />
+                </InputGroup>
+                <Button variant="secondary" type="submit">
+                  Add List +
+                </Button>
+              </form>
+            </InputGroup>
+          </Card.Body>
+        </Card>
       </div>
     </Container>
   );
