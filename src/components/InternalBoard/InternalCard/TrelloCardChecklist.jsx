@@ -2,7 +2,7 @@ import React from 'react'
 import { Card } from 'react-bootstrap';
 import { MdOutlineDeleteSweep } from 'react-icons/md';
 
-const TrelloCardModal = () => {
+const TrelloCardChecklist = ({checkList}) => {
   return (
     <Card
           style={{
@@ -15,7 +15,7 @@ const TrelloCardModal = () => {
           }}
         >
           <Card.Header className="d-flex justify-content-between align-items-center bg-black text-light border-black">
-            CheckList name{" "}
+            {checkList.name}
             <MdOutlineDeleteSweep
               className="del-hover fs-3"
               onClick={(e) => {
@@ -24,7 +24,7 @@ const TrelloCardModal = () => {
               }}
             />
           </Card.Header>
-          <Card.Body className="d-flex justify-content-start align-items-end bg-black text-light flex-column">
+          <Card.Body className="d-flex justify-content-start align-items-start bg-black text-light flex-column">
             <Card.Title className="fs-6 fw-bold">
               Lorem ipsum dolor sit amet consectetur adipisicing elit.
             </Card.Title>
@@ -42,4 +42,4 @@ const TrelloCardModal = () => {
   )
 }
 
-export default TrelloCardModal
+export default TrelloCardChecklist
