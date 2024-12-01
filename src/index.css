@@ -23,6 +23,8 @@ body{
 
 /* boards */
 
+
+
 .card-add-hover:hover {
   box-shadow: 1px 1px 20px rgb(245, 103, 126) !important;
   border: none;
@@ -38,6 +40,10 @@ body{
 
 .del-hover:hover {
   color: rgb(255, 49, 49);
+}
+
+.boardContainerHeight {
+  min-height: 70vh;
 }
 
 .scrollableFlex::-webkit-scrollbar { 

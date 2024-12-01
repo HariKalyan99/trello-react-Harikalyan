@@ -5,13 +5,26 @@ import App from './App.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {trelloStore} from './store/trelloStore.js'
 import { Provider } from 'react-redux';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import TrelloBoardSpace from './components/TrelloBoardSpace.jsx';
+import TrelloBoardInternal from './components/TrelloBoardInternal.jsx';
 
+
+const router = createBrowserRouter([
+  {path: "/board", element: <App />, children: [
+    {
+      path: "/board", element: <TrelloBoardSpace />
+    },
+    {
+      path: "/board/:id", element: <TrelloBoardInternal />
+    }
+  ]}
+])
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    {/* <RouterProvider router={router}/> */}
     <Provider store={trelloStore}>
-      <App />
+      <RouterProvider router={router}/>
     </Provider>
   </StrictMode>,
 )

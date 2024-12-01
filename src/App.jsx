@@ -1,8 +1,8 @@
-import TrelloBoardSpace from "./components/TrelloBoardSpace";
+import { Outlet } from "react-router-dom";
 
 function App() {
   return (
-    <TrelloBoardSpace />
+    <Outlet />
   );
 }
 
