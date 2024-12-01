@@ -58,7 +58,7 @@ body{
 .listCardHover:hover {
   box-shadow: 0px 0px 10px white;
   cursor: pointer;
-  color: #c7c7c7 !important;
+  color: rgb(173, 173, 173) !important;
 }
 
 
@@ -97,7 +97,14 @@ body{
     box-shadow: 0 0 0 .15rem rgb(245, 103, 126) !important;
 }
 
+.btn-close {
+  background-color: #ffffff !important;
+}
 
+.spanHover:hover {
+  background-color: rgb(211, 67, 67) !important;
+  cursor: pointer;
+}
 
 @media (min-width: 300px) and (max-width: 732px) {
   .boardContainerHeight {

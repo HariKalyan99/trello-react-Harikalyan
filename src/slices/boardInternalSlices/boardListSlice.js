@@ -31,7 +31,7 @@ export const getListsOfBoards = createAsyncThunk('board/lists/getAllLists', asyn
     return await Promise.all(data.map(async(list) => {
         const {id} = list;
         const cards = await dispatch(getAllCards(id));
-        list.cardData = cards.payload
+        list.cardData = cards.payload || [];
         return list;
     }));
 })
@@ -101,7 +101,7 @@ const listsOfBoardSlice = createSlice({
             state.addListPending = true;
             state.addListError = false;
         }).addCase(addList.fulfilled, (state, {payload}) => {
-            state.listsOfBoard = [payload, ...state.listsOfBoard]
+            state.listsOfBoard = [{...payload, cardData : []}, ...state.listsOfBoard]
             state.addListPending = false;
             state.addListError = false;
         }).addCase(addList.rejected, (state, _) => {
@@ -133,7 +133,7 @@ const listsOfBoardSlice = createSlice({
             if (payload?.listId && payload?.data) {
                 const list = state.listsOfBoard.find(x => x.id === payload.listId);
                 if (list) {
-                    list.cardData = [...list.cardData, payload.data]
+                    list.cardData = [...list.cardData, payload.data];
                 }
                 state.addCardPending = false;
                 state.addCardError = false;
