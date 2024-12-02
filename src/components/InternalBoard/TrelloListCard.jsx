@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Button,
   Col,
@@ -16,21 +16,22 @@ import { BsUiChecks } from "react-icons/bs";
 import { FaWindowClose } from "react-icons/fa";
 import { TbChecklist } from "react-icons/tb";
 import { RxCross2 } from "react-icons/rx";
-import { getCardCheckList } from "../../slices/boardInternalSlices/cardInternalChecklist/cardCheckListSlice";
+import { getCardCheckList, postCheckList } from "../../slices/boardInternalSlices/cardInternalChecklist/cardCheckListSlice";
 import TrelloCardChecklist from "./InternalCard/TrelloCardChecklist";
 
 const TrelloListCard = ({ card, listId }) => {
   const [show, setShow] = useState(false);
+  const checkListRef = useRef("")
 
-  const { checkList, checkListPending } = useSelector(
+  const { checkList, checkListPending, deleteCheckListPending, postCheckListPending } = useSelector(
     (state) => state.checklist
   );
   const handleClose = () => {
     setShow(false);
-    checkList = []; //allow no cache!
   };
   const handleShow = () => setShow(true);
   const dispatch = useDispatch();
+
 
   return (
     <>
@@ -71,7 +72,7 @@ const TrelloListCard = ({ card, listId }) => {
         </span>
         <Modal.Header className="bg-dark text-white d-flex justify-content-start align-items-center gap-2">
           <Modal.Title>Card name: "{card.name}"</Modal.Title>
-          {true && (
+          {deleteCheckListPending || checkListPending || postCheckListPending && (
             <Spinner
               animation="grow"
               className="d-flex align-items-center justify-content-center bg-black"
@@ -119,6 +120,8 @@ const TrelloListCard = ({ card, listId }) => {
               onSubmit={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
+                dispatch(postCheckList({name: checkListRef.current.value, cardId: card.id}));
+                checkListRef.current.value = "";
               }}
             >
               <InputGroup className="d-flex" size="sm">
@@ -131,8 +134,9 @@ const TrelloListCard = ({ card, listId }) => {
                 <Form.Control
                   aria-label="Default"
                   aria-describedby="inputGroup-sizing-default"
-                  placeholder="name your card"
+                  placeholder="name your checklist"
                   className="bg-light"
+                  ref={checkListRef}
                 />
               </InputGroup>
               <Button variant="danger" onClick={handleClose}>

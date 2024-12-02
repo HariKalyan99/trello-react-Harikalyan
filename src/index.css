@@ -58,7 +58,6 @@ body{
 .listCardHover:hover {
   box-shadow: 0px 0px 10px white;
   cursor: pointer;
-  color: rgb(173, 173, 173) !important;
 }
 
 
@@ -70,8 +69,15 @@ body{
 
 .delHover:hover{
   color: rgb(255, 55, 55) !important;
+  cursor: pointer;
 
 }
+
+.delHoverCheck:hover{
+  color: rgb(245, 103, 126) !important;
+  cursor: pointer;
+}
+
 
 .scrollContainer::-webkit-scrollbar { 
   display: none;  
