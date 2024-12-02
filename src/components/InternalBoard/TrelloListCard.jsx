@@ -16,22 +16,30 @@ import { BsUiChecks } from "react-icons/bs";
 import { FaWindowClose } from "react-icons/fa";
 import { TbChecklist } from "react-icons/tb";
 import { RxCross2 } from "react-icons/rx";
-import { getCardCheckList, postCheckList } from "../../slices/boardInternalSlices/cardInternalChecklist/cardCheckListSlice";
+import {
+  getCardCheckList,
+  postCheckList,
+} from "../../slices/boardInternalSlices/cardInternalChecklist/cardCheckListSlice";
 import TrelloCardChecklist from "./InternalCard/TrelloCardChecklist";
 
 const TrelloListCard = ({ card, listId }) => {
   const [show, setShow] = useState(false);
-  const checkListRef = useRef("")
+  const checkListRef = useRef("");
 
-  const { checkList, checkListPending, deleteCheckListPending, postCheckListPending } = useSelector(
-    (state) => state.checklist
-  );
+  const {
+    checkList,
+    checkListPending,
+    deleteCheckListPending,
+    postCheckListPending,
+    updateCheckItemPending,
+    postCheckItemPending,
+    deleteCheckItemPending,
+  } = useSelector((state) => state.checklist);
   const handleClose = () => {
     setShow(false);
   };
   const handleShow = () => setShow(true);
   const dispatch = useDispatch();
-
 
   return (
     <>
@@ -72,19 +80,24 @@ const TrelloListCard = ({ card, listId }) => {
         </span>
         <Modal.Header className="bg-dark text-white d-flex justify-content-start align-items-center gap-2">
           <Modal.Title>Card name: "{card.name}"</Modal.Title>
-          {deleteCheckListPending || checkListPending || postCheckListPending && (
-            <Spinner
-              animation="grow"
-              className="d-flex align-items-center justify-content-center bg-black"
-              size="lg"
-            >
+          {deleteCheckListPending ||
+            checkListPending ||
+            postCheckListPending ||
+            updateCheckItemPending ||
+            postCheckItemPending ||
+            (deleteCheckItemPending && (
               <Spinner
                 animation="grow"
-                size="sm"
-                className="bg-dark border-2 border-danger"
-              />
-            </Spinner>
-          )}
+                className="d-flex align-items-center justify-content-center bg-black"
+                size="lg"
+              >
+                <Spinner
+                  animation="grow"
+                  size="sm"
+                  className="bg-dark border-2 border-danger"
+                />
+              </Spinner>
+            ))}
         </Modal.Header>
 
         {checkList?.length > 0 && (
@@ -94,7 +107,11 @@ const TrelloListCard = ({ card, listId }) => {
           >
             {!checkListPending &&
               checkList?.map((checkList) => (
-                <TrelloCardChecklist key={checkList.id} checkList={checkList} />
+                <TrelloCardChecklist
+                  key={checkList.id}
+                  checkList={checkList}
+                  cardId={card.id}
+                />
               ))}
           </Modal.Body>
         )}
@@ -120,7 +137,12 @@ const TrelloListCard = ({ card, listId }) => {
               onSubmit={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                dispatch(postCheckList({name: checkListRef.current.value, cardId: card.id}));
+                dispatch(
+                  postCheckList({
+                    name: checkListRef.current.value,
+                    cardId: card.id,
+                  })
+                );
                 checkListRef.current.value = "";
               }}
             >

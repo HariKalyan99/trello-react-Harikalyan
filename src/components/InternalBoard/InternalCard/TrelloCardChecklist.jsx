@@ -4,13 +4,14 @@ import { FaListCheck } from "react-icons/fa6";
 import { RxCross2 } from "react-icons/rx";
 import { FaCheck } from "react-icons/fa";
 import { AiFillDelete } from "react-icons/ai";
-import { useDispatch } from "react-redux";
-import { deleteCheckItem, deleteCheckList, postCheckItem } from "../../../slices/boardInternalSlices/cardInternalChecklist/cardCheckListSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteCheckList, postCheckItem } from "../../../slices/boardInternalSlices/cardInternalChecklist/cardCheckListSlice";
 import TrelloCheckItem from "./TrelloCheckItem";
 
-const TrelloCardChecklist = ({ checkList }) => {
+const TrelloCardChecklist = ({ checkList, cardId }) => {
 
   const dispatch = useDispatch();
+  const {percentageConvertion} = useSelector(state => state.checklist)
 
   const checkItemRef = useRef("");
   return (
@@ -38,12 +39,12 @@ const TrelloCardChecklist = ({ checkList }) => {
       <Card.Body className="d-flex justify-content-start align-items-start bg-black text-light flex-column">
         <Form className="mb-1 w-100">
           <ProgressBar
-            now={70}
+            now={percentageConvertion}
             variant="danger"
-            label={`${70}%`}
+            label={`${percentageConvertion}%`}
             className="mb-4 mt-1"
           />
-          {checkList.checkItems.map((checkItem) => <TrelloCheckItem key={checkItem.id} checkItem={checkItem} checkList={checkList}/>)}
+          {checkList.checkItems.map((checkItem) => <TrelloCheckItem key={checkItem.id} checkItem={checkItem} checkList={checkList} cardId={cardId}/>)}
         </Form>
 
           <form
@@ -52,7 +53,6 @@ const TrelloCardChecklist = ({ checkList }) => {
               onSubmit={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log(checkItemRef.current.value)
                 dispatch(postCheckItem({name: checkItemRef.current.value, checkListId: checkList.id}));
                 checkItemRef.current.value = "";
               }}

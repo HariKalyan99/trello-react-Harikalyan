@@ -16,6 +16,9 @@ const initialState = {
   postCheckItemError: false,
   deleteCheckItemPending: false,
   deleteCheckItemError: false,
+  updateCheckItemPending: false,
+  updateCheckItemError: false,
+  percentageConvertion: 0,
 };
 // check lists
 export const getCardCheckList = createAsyncThunk(
@@ -24,6 +27,7 @@ export const getCardCheckList = createAsyncThunk(
     const { data } = await axios.get(
       `https://api.trello.com/1/cards/${cardId}/checklists?key=${APIKey}&token=${APIToken}`
     );
+
     return data;
   }
 );
@@ -70,11 +74,11 @@ export const deleteCheckItem = createAsyncThunk(
 
 export const updateCheckItem = createAsyncThunk(
   "card/checklist/checkitem/updateCheckItem",
-  async ({ cardId, checkItemId }) => {
+  async ({ cardId, checkItemId, checkListId, state }) => {
     const { data } = await axios.put(
       `https://api.trello.com/1/cards/${cardId}/checkItem/${checkItemId}?key=${APIKey}&token=${APIToken}&state=${state}`
     );
-    return data;
+    return { data, checkListId, checkItemId };
   }
 );
 
@@ -90,6 +94,13 @@ const checkListSlice = createSlice({
       })
       .addCase(getCardCheckList.fulfilled, (state, { payload }) => {
         state.checkList = payload;
+        state.percentageConvertion = payload.reduce((acc, cv) => {
+          const { checkItems } = cv;
+          acc =
+            Math.ceil(100 / checkItems.length) *
+            checkItems.filter((x) => x.state === "complete").length;
+          return acc;
+        }, 0);
         state.checkListPending = false;
         state.checkListError = false;
       })
@@ -97,69 +108,114 @@ const checkListSlice = createSlice({
         state.checkListPending = false;
         state.checkListError = true;
       });
-      builder
-        .addCase(postCheckList.pending, (state) => {
-          state.postCheckListPending = true;
-          state.postCheckListError = false;
-        })
-        .addCase(postCheckList.fulfilled, (state, { payload }) => {
-          state.checkList = [...state.checkList, payload];
-          state.postCheckListPending = false;
-          state.postCheckListError = false;
-        })
-        .addCase(postCheckList.rejected, (state, _) => {
-          state.postCheckListPending = false;
-          state.postCheckListError = true;
-        });
-      builder
-        .addCase(deleteCheckList.pending, (state) => {
-          state.deleteCheckListPending = true;
-          state.deleteCheckListError = false;
-        })
-        .addCase(deleteCheckList.fulfilled, (state, { payload }) => {
-          state.checkList = state.checkList.filter((x) => x.id !== payload);
-          state.deleteCheckListPending = false;
-          state.deleteCheckListError = false;
-        })
-        .addCase(deleteCheckList.rejected, (state, _) => {
-          state.deleteCheckListPending = false;
-          state.deleteCheckListError = true;
-        });
-      builder
-        .addCase(postCheckItem.pending, (state) => {
-          state.postCheckItemPending = true;
-          state.postCheckItemError = false;
-        })
-        .addCase(postCheckItem.fulfilled, (state, { payload }) => {
-          let check = state.checkList.find((x) => x.id === payload.checkListId);
-          if (check) {
-            check.checkItems = [...check.checkItems, payload.data];
-          }
-          state.postCheckItemPending = false;
-          state.postCheckItemError = false;
-        })
-        .addCase(postCheckItem.rejected, (state, _) => {
-          state.postCheckItemPending = false;
-          state.postCheckItemError = true;
-        });
+    builder
+      .addCase(postCheckList.pending, (state) => {
+        state.postCheckListPending = true;
+        state.postCheckListError = false;
+      })
+      .addCase(postCheckList.fulfilled, (state, { payload }) => {
+        state.checkList = [...state.checkList, payload];
+        state.postCheckListPending = false;
+        state.postCheckListError = false;
+      })
+      .addCase(postCheckList.rejected, (state, _) => {
+        state.postCheckListPending = false;
+        state.postCheckListError = true;
+      });
+    builder
+      .addCase(deleteCheckList.pending, (state) => {
+        state.deleteCheckListPending = true;
+        state.deleteCheckListError = false;
+      })
+      .addCase(deleteCheckList.fulfilled, (state, { payload }) => {
+        state.checkList = state.checkList.filter((x) => x.id !== payload);
+        state.deleteCheckListPending = false;
+        state.deleteCheckListError = false;
+      })
+      .addCase(deleteCheckList.rejected, (state, _) => {
+        state.deleteCheckListPending = false;
+        state.deleteCheckListError = true;
+      });
+    builder
+      .addCase(postCheckItem.pending, (state) => {
+        state.postCheckItemPending = true;
+        state.postCheckItemError = false;
+      })
+      .addCase(postCheckItem.fulfilled, (state, { payload }) => {
+        let check = state.checkList.find((x) => x.id === payload.checkListId);
+        if (check) {
+          check.checkItems = [...check.checkItems, payload.data];
+          
+        }
+        state.percentageConvertion = state.checkList.reduce((acc, cv) => {
+            const { checkItems } = cv;
+            acc =
+              Math.ceil(100 / checkItems.length) *
+              checkItems.filter((x) => x.state === "complete").length;
+            return acc;
+          }, 0);
+        state.postCheckItemPending = false;
+        state.postCheckItemError = false;
+      })
+      .addCase(postCheckItem.rejected, (state, _) => {
+        state.postCheckItemPending = false;
+        state.postCheckItemError = true;
+      });
 
-      builder
-        .addCase(deleteCheckItem.pending, (state) => {
-          state.deleteCheckItemPending = true;
-          state.deleteCheckItemError = false;
-        })
-        .addCase(deleteCheckItem.fulfilled, (state, { payload }) => {
-          let check = state.checkList.find((x) => x.id === payload.checkListId);
-          if (check) {
-            check.checkItems = check.checkItems.filter(x => x.id !== payload.idCheckItem)
-          }
-          state.deleteCheckItemPending = false;
-          state.deleteCheckItemError = false;
-        })
-        .addCase(deleteCheckItem.rejected, (state, _) => {
-          state.deleteCheckItemPending = false;
-          state.deleteCheckItemError = true;
-        });
+    builder
+      .addCase(deleteCheckItem.pending, (state) => {
+        state.deleteCheckItemPending = true;
+        state.deleteCheckItemError = false;
+      })
+      .addCase(deleteCheckItem.fulfilled, (state, { payload }) => {
+        let check = state.checkList.find((x) => x.id === payload.checkListId);
+        if (check) {
+          check.checkItems = check.checkItems.filter(
+            (x) => x.id !== payload.idCheckItem
+          );
+        }
+        state.percentageConvertion = state.checkList.reduce((acc, cv) => {
+            const { checkItems } = cv;
+            acc =
+              Math.ceil(100 / checkItems.length) *
+              checkItems.filter((x) => x.state === "complete").length;
+            return acc;
+          }, 0);
+        state.deleteCheckItemPending = false;
+        state.deleteCheckItemError = false;
+      })
+      .addCase(deleteCheckItem.rejected, (state, _) => {
+        state.deleteCheckItemPending = false;
+        state.deleteCheckItemError = true;
+      });
+
+    builder
+      .addCase(updateCheckItem.pending, (state) => {
+        state.updateCheckItemPending = true;
+        state.updateCheckItemError = false;
+      })
+      .addCase(updateCheckItem.fulfilled, (state, { payload }) => {
+        let check = state.checkList?.find((x) => x.id === payload?.checkListId);
+        if (check) {
+          let index = check.checkItems.findIndex(
+            (x) => x.id === payload.checkItemId
+          );
+          check.checkItems[index] = payload.data;
+          state.percentageConvertion = state.checkList.reduce((acc, cv) => {
+            const { checkItems } = cv;
+            acc =
+              Math.ceil(100 / checkItems.length) *
+              checkItems.filter((x) => x.state === "complete").length;
+            return acc;
+          }, 0);
+        }
+        state.updateCheckItemPending = false;
+        state.updateCheckItemError = false;
+      })
+      .addCase(updateCheckItem.rejected, (state, _) => {
+        state.updateCheckItemPending = false;
+        state.updateCheckItemError = true;
+      });
   },
 });
 
