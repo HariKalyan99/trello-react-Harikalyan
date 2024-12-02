@@ -16,7 +16,9 @@ const TrelloBoardInternal = () => {
   const dispatch = useDispatch();
   let { boardId } = useParams();
   useEffect(() => {
-    dispatch(getListsOfBoards(boardId));
+    if(boardId){
+      dispatch(getListsOfBoards(boardId));
+    }
   }, [dispatch]);
 
   return (
@@ -39,10 +41,13 @@ const TrelloBoardInternal = () => {
                 onSubmit={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  dispatch(
-                    addList({ boardId, name: addListRef.current.value })
-                  );
-                  addListRef.current.value = "";
+                  if(addListRef.current.value?.length > 0){
+                    dispatch(
+                      addList({ boardId, name: addListRef.current.value })
+                    );
+                    addListRef.current.value = "";
+                  }
+                  
                 }}
               >
                 <InputGroup className="d-flex">

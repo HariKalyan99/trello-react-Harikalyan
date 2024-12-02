@@ -16,7 +16,7 @@ const initialState = {
     deleteCardPending: false,
     deleteCardError: false,
     addCardPending: false,
-addCardError: false
+addCardError: false,
 }
 
 const getAllCards = createAsyncThunk('boards/list/cards/getAllCards', async(listId) => {
@@ -69,7 +69,9 @@ export const addCard = createAsyncThunk('board/lists/addCard', async({listId, na
 const listsOfBoardSlice = createSlice({
     name: "lists",
     initialState,
-    reducers: {},
+    reducers: {
+        
+    },
     extraReducers: (builder) => {
         builder.addCase(getListsOfBoards.pending, (state) => {
             state.listsPending = true;

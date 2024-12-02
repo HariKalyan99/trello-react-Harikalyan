@@ -80,24 +80,31 @@ const TrelloListCard = ({ card, listId }) => {
         </span>
         <Modal.Header className="bg-dark text-white d-flex justify-content-start align-items-center gap-2">
           <Modal.Title>Card name: "{card.name}"</Modal.Title>
-          {deleteCheckListPending ||
-            checkListPending ||
-            postCheckListPending ||
-            updateCheckItemPending ||
-            postCheckItemPending ||
-            (deleteCheckItemPending && (
-              <Spinner
-                animation="grow"
-                className="d-flex align-items-center justify-content-center bg-black"
-                size="lg"
-              >
+          {[
+            checkListPending,
+            deleteCheckListPending,
+            postCheckListPending,
+            updateCheckItemPending,
+            postCheckItemPending,
+            deleteCheckItemPending,
+          ].map((loading, ind) => {
+            return (
+              loading && (
                 <Spinner
+                  key={ind}
                   animation="grow"
-                  size="sm"
-                  className="bg-dark border-2 border-danger"
-                />
-              </Spinner>
-            ))}
+                  className="d-flex align-items-center justify-content-center bg-black"
+                  size="lg"
+                >
+                  <Spinner
+                    animation="grow"
+                    size="sm"
+                    className="bg-dark border-2 border-danger"
+                  />
+                </Spinner>
+              )
+            );
+          })}
         </Modal.Header>
 
         {checkList?.length > 0 && (
@@ -137,13 +144,15 @@ const TrelloListCard = ({ card, listId }) => {
               onSubmit={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                dispatch(
-                  postCheckList({
-                    name: checkListRef.current.value,
-                    cardId: card.id,
-                  })
-                );
-                checkListRef.current.value = "";
+                if (checkListRef.current.value?.length > 0) {
+                  dispatch(
+                    postCheckList({
+                      name: checkListRef.current.value,
+                      cardId: card.id,
+                    })
+                  );
+                  checkListRef.current.value = "";
+                }
               }}
             >
               <InputGroup className="d-flex" size="sm">

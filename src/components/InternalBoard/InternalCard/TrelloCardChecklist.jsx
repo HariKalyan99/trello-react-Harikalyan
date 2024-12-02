@@ -1,19 +1,17 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Button, Card, Form, InputGroup, ProgressBar } from "react-bootstrap";
 import { FaListCheck } from "react-icons/fa6";
-import { RxCross2 } from "react-icons/rx";
 import { FaCheck } from "react-icons/fa";
 import { AiFillDelete } from "react-icons/ai";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { deleteCheckList, postCheckItem } from "../../../slices/boardInternalSlices/cardInternalChecklist/cardCheckListSlice";
 import TrelloCheckItem from "./TrelloCheckItem";
 
 const TrelloCardChecklist = ({ checkList, cardId }) => {
 
   const dispatch = useDispatch();
-  const {percentageConvertion} = useSelector(state => state.checklist)
-
   const checkItemRef = useRef("");
+
   return (
     <Card
       style={{
@@ -39,9 +37,9 @@ const TrelloCardChecklist = ({ checkList, cardId }) => {
       <Card.Body className="d-flex justify-content-start align-items-start bg-black text-light flex-column">
         <Form className="mb-1 w-100">
           <ProgressBar
-            now={percentageConvertion}
+            now={( 100 /checkList.checkItems?.length).toFixed(0) * checkList.checkItems.filter((x) => x.state === "complete").length || 0}
             variant="danger"
-            label={`${percentageConvertion}%`}
+            label={( 100 /checkList.checkItems?.length).toFixed(0) * checkList.checkItems.filter((x) => x.state === "complete").length || 0}
             className="mb-4 mt-1"
           />
           {checkList.checkItems.map((checkItem) => <TrelloCheckItem key={checkItem.id} checkItem={checkItem} checkList={checkList} cardId={cardId}/>)}
@@ -53,8 +51,11 @@ const TrelloCardChecklist = ({ checkList, cardId }) => {
               onSubmit={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                dispatch(postCheckItem({name: checkItemRef.current.value, checkListId: checkList.id}));
-                checkItemRef.current.value = "";
+                if(checkItemRef.current.value?.length > 0){
+                  dispatch(postCheckItem({name: checkItemRef.current.value, checkListId: checkList.id}));
+                  checkItemRef.current.value = "";
+                }
+                
               }}
             >
                 <InputGroup className="d-flex  pt-3" size="sm">

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Button, Card, Form, InputGroup, ListGroup } from "react-bootstrap";
 import { MdFolderDelete } from "react-icons/md";
 import { useDispatch } from "react-redux";
@@ -9,9 +9,12 @@ import {
 import TrelloListCard from "./TrelloListCard";
 import { MdLibraryAdd } from "react-icons/md";
 
+let APIKey = import.meta.env.VITE_APIKEY;
+let APIToken = import.meta.env.VITE_APITOKEN;
 const TrelloInternalListCard = ({ list }) => {
   const addCardRef = useRef("");
   const dispatch = useDispatch();
+
   return (
     <Card
       style={{ height: "20%", minWidth: "20rem", width: "20rem" }}
@@ -43,10 +46,13 @@ const TrelloInternalListCard = ({ list }) => {
             onSubmit={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              dispatch(
-                addCard({ listId: list.id, name: addCardRef.current.value })
-              );
-              addCardRef.current.value = "";
+              if(addCardRef.current.value?.length > 0){
+                dispatch(
+                  addCard({ listId: list.id, name: addCardRef.current.value })
+                );
+                addCardRef.current.value = "";
+              }
+              
             }}
           >
             <InputGroup className="d-flex" size="sm">

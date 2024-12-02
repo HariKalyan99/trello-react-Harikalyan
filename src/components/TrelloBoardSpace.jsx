@@ -29,9 +29,11 @@ const TrelloBoardSpace = () => {
 
   const handleBoardSubmit = (e) => {
     e.preventDefault();
-    dispatch(postNewBoard(boardInputRef.current.value));
-    boardInputRef.current.value = "";
-    setShow(!show);
+    if(boardInputRef.current.value?.length > 0){
+      dispatch(postNewBoard(boardInputRef.current.value));
+      boardInputRef.current.value = "";
+      setShow(!show);
+    }
   };
   return (
     <Container fluid className="min-vh-100 my-5">

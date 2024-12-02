@@ -18,7 +18,6 @@ const initialState = {
   deleteCheckItemError: false,
   updateCheckItemPending: false,
   updateCheckItemError: false,
-  percentageConvertion: 0,
 };
 // check lists
 export const getCardCheckList = createAsyncThunk(
@@ -27,8 +26,7 @@ export const getCardCheckList = createAsyncThunk(
     const { data } = await axios.get(
       `https://api.trello.com/1/cards/${cardId}/checklists?key=${APIKey}&token=${APIToken}`
     );
-
-    return data;
+    return data
   }
 );
 
@@ -85,7 +83,9 @@ export const updateCheckItem = createAsyncThunk(
 const checkListSlice = createSlice({
   name: "checklist",
   initialState,
-  reducers: {},
+  reducers: {
+   
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getCardCheckList.pending, (state) => {
@@ -94,13 +94,6 @@ const checkListSlice = createSlice({
       })
       .addCase(getCardCheckList.fulfilled, (state, { payload }) => {
         state.checkList = payload;
-        state.percentageConvertion = payload.reduce((acc, cv) => {
-          const { checkItems } = cv;
-          acc =
-            Math.ceil(100 / checkItems.length) *
-            checkItems.filter((x) => x.state === "complete").length;
-          return acc;
-        }, 0);
         state.checkListPending = false;
         state.checkListError = false;
       })
@@ -147,13 +140,6 @@ const checkListSlice = createSlice({
           check.checkItems = [...check.checkItems, payload.data];
           
         }
-        state.percentageConvertion = state.checkList.reduce((acc, cv) => {
-            const { checkItems } = cv;
-            acc =
-              Math.ceil(100 / checkItems.length) *
-              checkItems.filter((x) => x.state === "complete").length;
-            return acc;
-          }, 0);
         state.postCheckItemPending = false;
         state.postCheckItemError = false;
       })
@@ -174,13 +160,6 @@ const checkListSlice = createSlice({
             (x) => x.id !== payload.idCheckItem
           );
         }
-        state.percentageConvertion = state.checkList.reduce((acc, cv) => {
-            const { checkItems } = cv;
-            acc =
-              Math.ceil(100 / checkItems.length) *
-              checkItems.filter((x) => x.state === "complete").length;
-            return acc;
-          }, 0);
         state.deleteCheckItemPending = false;
         state.deleteCheckItemError = false;
       })
@@ -201,13 +180,6 @@ const checkListSlice = createSlice({
             (x) => x.id === payload.checkItemId
           );
           check.checkItems[index] = payload.data;
-          state.percentageConvertion = state.checkList.reduce((acc, cv) => {
-            const { checkItems } = cv;
-            acc =
-              Math.ceil(100 / checkItems.length) *
-              checkItems.filter((x) => x.state === "complete").length;
-            return acc;
-          }, 0);
         }
         state.updateCheckItemPending = false;
         state.updateCheckItemError = false;
