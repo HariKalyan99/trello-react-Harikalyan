@@ -7,6 +7,7 @@ import {
   InputGroup,
   ListGroup,
   Modal,
+  Spinner,
 } from "react-bootstrap";
 import { TiDeleteOutline } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
@@ -60,7 +61,6 @@ const TrelloListCard = ({ card, listId }) => {
         backdrop="static"
         keyboard={true}
         centered
-        size="lg"
         style={{ border: "3px solid rgb(245, 103, 126)" }}
       >
         <span
@@ -69,22 +69,37 @@ const TrelloListCard = ({ card, listId }) => {
         >
           <RxCross2 size={25} className="text-light" />
         </span>
-        <Modal.Header className="bg-dark text-white ">
+        <Modal.Header className="bg-dark text-white d-flex justify-content-start align-items-center gap-2">
           <Modal.Title>Card name: "{card.name}"</Modal.Title>
+          {true && (
+            <Spinner
+              animation="grow"
+              className="d-flex align-items-center justify-content-center bg-black"
+              size="lg"
+            >
+              <Spinner
+                animation="grow"
+                size="sm"
+                className="bg-dark border-2 border-danger"
+              />
+            </Spinner>
+          )}
         </Modal.Header>
-        
 
-        {checkList?.length > 0 && <Modal.Body
-          className="bg-dark text-white d-flex justify-content-start align-items-start flex-column gap-2"
-          style={{ minHeight: "40vh", height: "auto" }}
-        >
-          {!checkListPending && checkList?.map((checkList) => (
-            <TrelloCardChecklist key={checkList.id} checkList={checkList}/>
-          ))}
-        </Modal.Body>}
+        {checkList?.length > 0 && (
+          <Modal.Body
+            className="bg-dark text-white d-flex justify-content-start align-items-start flex-column gap-2"
+            style={{ minHeight: "40vh", height: "auto" }}
+          >
+            {!checkListPending &&
+              checkList?.map((checkList) => (
+                <TrelloCardChecklist key={checkList.id} checkList={checkList} />
+              ))}
+          </Modal.Body>
+        )}
 
-
-        {!checkList?.length > 0  && <Modal.Body
+        {!checkList?.length > 0 && (
+          <Modal.Body
             className="bg-dark text-white d-flex justify-content-center"
             style={{ minHeight: "40vh" }}
           >
@@ -94,8 +109,8 @@ const TrelloListCard = ({ card, listId }) => {
                 roundedCircle
               />
             </Col>
-          </Modal.Body>}
-
+          </Modal.Body>
+        )}
 
         <Modal.Footer className="bg-dark text-white border-5">
           <InputGroup className="d-flex flex-column gap-3">
