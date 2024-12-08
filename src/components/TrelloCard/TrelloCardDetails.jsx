@@ -6,6 +6,8 @@ import { BsThreeDots } from "react-icons/bs";
 import axios from "axios";
 import TrelloCard from "./TrelloCard";
 import { MdArchive } from "react-icons/md";
+import ListCalls from "../utils/listApiServices";
+const {getCards} = new ListCalls()
 
 let APIKey = import.meta.env.VITE_APIKEY;
 let APIToken = import.meta.env.VITE_APITOKEN;
@@ -15,8 +17,10 @@ const TrelloCardDetails = ({
   deleteList,
   deleteCardsOfLists,
   invokerArchive,
-  archiveListOfCardsId,
+  archiveListOfCardsId
 }) => {
+  // This segment uses the technique called state uplifting and props drilling which are responsible for state management.
+
   const [addCardActive, setAddCardActive] = useState(false);
   const [listOfCards, setListOfCards] = useState([]);
   const [cards, setCards] = useState([]);
@@ -26,6 +30,7 @@ const TrelloCardDetails = ({
   const [makeSkeletonActive, setMakeSkeletonActive] = useState(false);
 
   const addCardRef = useRef("");
+
   useEffect(() => {
     const controller = new AbortController();
     const { signal } = controller;
@@ -33,10 +38,7 @@ const TrelloCardDetails = ({
     const fetchCardsById = async (listId) => {
       try {
         setMakeSkeletonActive(true);
-        const { data } = await axios.get(
-          `https://api.trello.com/1/lists/${listId}/cards?key=${APIKey}&token=${APIToken}`,
-          { signal }
-        );
+        const data = await getCards("https://api.trello.com/1/lists/", listId, signal)
         setMakeSkeletonActive(false);
         setListOfCards(data);
       } catch (error) {

@@ -12,7 +12,8 @@ import BoardCard from "./BoardCard";
 const TrelloBoardCard = ({ checklistActive, addCheckList, id }) => {
   const { boardList, addBoardFn, skeletonLoad, boardPopOpen, setBoardPopOpen } =
     useContext(boardStore);
-  // const [boardPopOpen, setBoardPopOpen] = useState(false);
+  // This segment uses the context API and via the central store repository which is added in the store is responsible for state management.
+
 
   const boardRef = useRef("");
 
@@ -22,19 +23,6 @@ const TrelloBoardCard = ({ checklistActive, addCheckList, id }) => {
     addBoardFn(boardRef.current.value);
     boardRef.current.value = "";
   };
-
-  //     const [arrow, setArrow] = useState('Show');
-  //   const mergedArrow = useMemo(() => {
-  //     if (arrow === 'Hide') {
-  //       return false;
-  //     }
-  //     if (arrow === 'Show') {
-  //       return true;
-  //     }
-  //     return {
-  //       pointAtCenter: true,
-  //     };
-  //   }, [arrow]);
 
   const handleSubmitChecklist = (e) => {
     e.preventDefault();

@@ -6,7 +6,10 @@ import { IoReturnDownBackOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 
 const TrelloNavigation = ({ boardsPage }) => {
+  // the boardspage is just a composition: where when witnessed comming from a component, renders a specific functionality
+
   const linkStyle = { textDecoration: "none", color: "white" };
+
   return (
     <Header
       className={`h-[3rem] text-white ${

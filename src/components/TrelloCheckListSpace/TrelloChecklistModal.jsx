@@ -3,10 +3,8 @@ import React, { useContext, useEffect, useState } from "react";
 import TrelloBoardCard from "../TrelloBoardCard";
 import { boardStore } from "../../store/TrelloStoreProvider";
 import TrelloCheckListSpace from "./TrelloCheckListSpace";
-import axios from "axios";
-
-let APIKey = import.meta.env.VITE_APIKEY;
-let APIToken = import.meta.env.VITE_APITOKEN;
+import CheckListCalls from "../utils/checkListApiServices";
+const { getAllCheckLists, removeChecklist } = new CheckListCalls();
 
 const TrelloChecklistModal = ({
   modalOpen,
@@ -16,6 +14,8 @@ const TrelloChecklistModal = ({
   cardId,
   getCheckList,
 }) => {
+  // This segment uses the technique called state uplifting and props drilling which are responsible for state management, and some of the CRUD operations are taking place in the Modal components
+
   const { setBoardPopOpen } = useContext(boardStore);
   const [checkListArray, setChecklistArray] = useState([]);
   const [getDeleteCheckList, setDeleteCheckList] = useState("");
@@ -24,8 +24,9 @@ const TrelloChecklistModal = ({
   useEffect(() => {
     const getCardCheckList = async (id) => {
       try {
-        const { data } = await axios.get(
-          `https://api.trello.com/1/cards/${id}/checklists?key=${APIKey}&token=${APIToken}`
+        const data = await getAllCheckLists(
+          "https://api.trello.com/1/cards/",
+          id
         );
         setChecklistArray(data);
       } catch (error) {
@@ -42,12 +43,15 @@ const TrelloChecklistModal = ({
     const delCardCheckList = async (id) => {
       try {
         setSpinShow(true);
-        await axios.delete(
-          `https://api.trello.com/1/checklists/${id}?key=${APIKey}&token=${APIToken}`
+        const res = await removeChecklist(
+          "https://api.trello.com/1/checklists/",
+          id
         );
-        setSpinShow(false);
+        if (res === "Checklist Deleted") {
+          setSpinShow(false);
 
-        setChecklistArray(checkListArray.filter((x) => x.id !== id));
+          setChecklistArray(checkListArray.filter((x) => x.id !== id));
+        }
       } catch (error) {
         console.log(error);
       }

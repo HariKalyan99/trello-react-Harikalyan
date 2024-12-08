@@ -2,12 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import { Flex, Space, Spin } from "antd";
 import { GoChecklist } from "react-icons/go";
 import { MdOutlineCancel } from "react-icons/md";
-import axios from "axios";
 import CheckItem from "./CheckItem";
 import { Progress } from "antd";
+import CheckItemsCalls from "../utils/CheckItemsApiService";
 
-let APIKey = import.meta.env.VITE_APIKEY;
-let APIToken = import.meta.env.VITE_APITOKEN;
+const {checkItem, editCheckItem, removeCheckItem ,createNewCheckItem} = new CheckItemsCalls()
 
 const TrelloCheckListSpace = ({
   name,
@@ -16,6 +15,8 @@ const TrelloCheckListSpace = ({
   cardId,
   checkListArray,
 }) => {
+  // This segment uses the technique called state uplifting and props drilling which are responsible for state management.
+
   const [checkItems, setCheckItems] = useState([]);
   const [getCheckItem, setCheckItem] = useState("");
   const [getDelCheckItem, setDelCheckItem] = useState("");
@@ -29,9 +30,7 @@ const TrelloCheckListSpace = ({
   useEffect(() => {
     const getCheckItem = async (id) => {
       try {
-        const { data } = await axios.get(
-          `https://api.trello.com/1/checklists/${id}/checkItems?key=${APIKey}&token=${APIToken}`
-        );
+        const data = await checkItem("https://api.trello.com/1/checklists/", id)
         if (data?.length > 0) {
           setCheckItems(data);
         }
@@ -49,9 +48,7 @@ const TrelloCheckListSpace = ({
     const postCheckItem = async ({ id, name }) => {
       try {
         setItemSpinShow(true);
-        const { data } = await axios.post(
-          `https://api.trello.com/1/checklists/${id}/checkItems?name=${name}&key=${APIKey}&token=${APIToken}`
-        );
+        const data = await createNewCheckItem("https://api.trello.com/1/checklists/", name, id)
         setItemSpinShow(false);
 
         setCheckItems([...checkItems, data]);
@@ -69,13 +66,11 @@ const TrelloCheckListSpace = ({
     const deleteCheckItem = async (idCheckItem) => {
       try {
         setItemSpinShow(true);
-
-        await axios.delete(
-          `https://api.trello.com/1/checklists/${id}/checkItems/${idCheckItem}?key=${APIKey}&token=${APIToken}`
-        );
-        setItemSpinShow(false);
-
-        setCheckItems(checkItems.filter((x) => x.id !== idCheckItem));
+        const res = await removeCheckItem("https://api.trello.com/1/checklists/", id, idCheckItem)
+        if(res === "Checkitem Deleted") {
+          setItemSpinShow(false);
+          setCheckItems(checkItems.filter((x) => x.id !== idCheckItem));
+        }
       } catch (error) {
         console.log(error);
       }
@@ -90,10 +85,7 @@ const TrelloCheckListSpace = ({
     const putCheckItem = async ({ checkItemId, state, cardId }) => {
       try {
         setItemSpinShow(true);
-
-        const { data } = await axios.put(
-          `https://api.trello.com/1/cards/${cardId}/checkItem/${checkItemId}?key=${APIKey}&token=${APIToken}&state=${state}`
-        );
+        const data = await editCheckItem("https://api.trello.com/1/cards/", state, cardId, checkItemId)
         let findIndex = checkItems.findIndex((x) => x.id === checkItemId);
         checkItems[findIndex] = data;
         setItemSpinShow(false);

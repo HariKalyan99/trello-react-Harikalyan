@@ -29,7 +29,6 @@ const TrelloCard = ({
       >
         <Space className="flex flex-col justify-start items-start">
           <span>{name}</span>
-          {/* <Progress percent={result} type="circle" size={[20, 20]} strokeColor={progressColors}/> */}
         </Space>
         <MdCancelPresentation
           onClick={(e) => {

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { createContext, useEffect, useReducer, useState } from "react";
-
+import BoardCalls from "../components/utils/boardsApiServices";
+const { getAllBoards, createNewBoard, removeBoard } = new BoardCalls();
 export const boardStore = createContext({
   boardList: [],
   addBoardFn: () => {},
@@ -11,7 +12,7 @@ export const boardStore = createContext({
   setBoardPopOpen: () => {},
   boardSpinShow: false,
   boardSpinId: "",
-  createBoardSpinShow: false
+  createBoardSpinShow: false,
 });
 
 function pureBoardReducerFn(currentBoardList, action) {
@@ -53,11 +54,9 @@ const TrelloStoreProvider = ({ children }) => {
     const fetchBoards = async () => {
       try {
         setSkeletonLoad(true);
-        const { data } = await axios.get(
-          `https://api.trello.com/1/members/me/boards?key=${APIKey}&token=${APIToken}`,
-          {
-            signal,
-          }
+        const data = await getAllBoards(
+          "https://api.trello.com/1/members/me/boards",
+          signal
         );
         if (data) {
           setSkeletonLoad(false);
@@ -87,9 +86,10 @@ const TrelloStoreProvider = ({ children }) => {
   useEffect(() => {
     const postNewBoard = async (name) => {
       try {
-setCreateBoardSpinShow(true);
-        const { data } = await axios.post(
-          `https://api.trello.com/1/boards/?name=${name}&key=${APIKey}&token=${APIToken}`
+        setCreateBoardSpinShow(true);
+        const data = await createNewBoard(
+          "https://api.trello.com/1/boards/",
+          name
         );
         setCreateBoardSpinShow(false);
 
@@ -114,17 +114,16 @@ setCreateBoardSpinShow(true);
       try {
         setBoardSpinId(id);
         setBoardSpinShow(true);
-
-        await axios.delete(
-          `https://api.trello.com/1/boards/${id}?key=${APIKey}&token=${APIToken}`
-        );
-        setBoardSpinShow(false);
-        dispatchBoardReducerFn({
-          type: "DEL_BOARD",
-          payload: {
-            id,
-          },
-        });
+        let res = await removeBoard("https://api.trello.com/1/boards/", id);
+        if (res === "Board Deleted") {
+          setBoardSpinShow(false);
+          dispatchBoardReducerFn({
+            type: "DEL_BOARD",
+            payload: {
+              id,
+            },
+          });
+        }
       } catch (error) {
         console.log(error);
       }
@@ -154,7 +153,7 @@ setCreateBoardSpinShow(true);
         setBoardPopOpen,
         boardSpinShow,
         boardSpinId,
-        createBoardSpinShow
+        createBoardSpinShow,
       }}
     >
       {children}

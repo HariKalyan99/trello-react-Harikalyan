@@ -2,14 +2,14 @@ import { Content } from "antd/es/layout/layout";
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import { Flex, Space } from "antd";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import TrelloCardDetails from "../TrelloCard/TrelloCardDetails";
 import { IoAdd } from "react-icons/io5";
 import { MdOutlineCancelScheduleSend } from "react-icons/md";
 import TrelloNavigation from "../TrelloNavigation";
+import ListCalls from "../utils/listApiServices";
+const { getAllLists, removeAllCards, removeList, createNewList } =
+  new ListCalls();
 
-let APIKey = import.meta.env.VITE_APIKEY;
-let APIToken = import.meta.env.VITE_APITOKEN;
 function pureBoardSpaceReducerFn(currentBoardSpace, action) {
   let boardSpace = currentBoardSpace;
   const { type } = action;
@@ -26,7 +26,6 @@ function pureBoardSpaceReducerFn(currentBoardSpace, action) {
 const TrelloBoardsPage = () => {
   const { id } = useParams();
 
-  // const [lists, setLists] = useState([]);
   const [archiveList, setArchiveList] = useState("");
   const [archiveListOfCards, setarchiveListOfCards] = useState("");
   const [archiveListOfCardsId, setarchiveListOfCardsId] = useState("");
@@ -42,13 +41,15 @@ const TrelloBoardsPage = () => {
     pureBoardSpaceReducerFn,
     []
   );
+
+  // This segment uses the reducer functionality for state management.
   useEffect(() => {
     const fetchListsById = async (boardId) => {
       try {
-        const { data } = await axios.get(
-          `https://api.trello.com/1/boards/${boardId}/lists?key=${APIKey}&token=${APIToken}`
+        const data = await getAllLists(
+          "https://api.trello.com/1/boards/",
+          boardId
         );
-
         dispatchReducerBoardSpace({
           type: "INITIAL_LISTS",
           payload: {
@@ -72,8 +73,9 @@ const TrelloBoardsPage = () => {
   useEffect(() => {
     const archiveAllCards = async (id) => {
       try {
-        const data = await axios.post(
-          `https://api.trello.com/1/lists/${id}/archiveAllCards?key=${APIKey}&token=${APIToken}`
+        const data = await removeAllCards(
+          "https://api.trello.com/1/lists/",
+          id
         );
         if (data.status === 200) {
           setarchiveListOfCardsId(id);
@@ -96,9 +98,7 @@ const TrelloBoardsPage = () => {
   useEffect(() => {
     const archiveListFn = async (id) => {
       try {
-        const data = await axios.put(
-          `https://api.trello.com/1/lists/${id}/closed?key=${APIKey}&token=${APIToken}&value=true`
-        );
+        const data = await removeList("https://api.trello.com/1/lists/", id);
         if (data.status === 200) {
           setInvoker(!invoker);
         }
@@ -119,8 +119,13 @@ const TrelloBoardsPage = () => {
   useEffect(() => {
     const postNewList = async (name) => {
       try {
-        const data = await axios.post(
-          `https://api.trello.com/1/lists?name=${name}&idBoard=${id}&key=${APIKey}&token=${APIToken}`
+        // const data = await axios.post(
+        //   `https://api.trello.com/1/lists?name=${name}&idBoard=${id}&key=${APIKey}&token=${APIToken}`
+        // );
+        const data = await createNewList(
+          "https://api.trello.com/1/lists",
+          name,
+          id
         );
         if (data.status === 200) {
           dispatchReducerBoardSpace({
