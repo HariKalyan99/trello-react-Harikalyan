@@ -11,6 +11,26 @@ const TrelloCardChecklist = ({ checkList, cardId }) => {
 
   const dispatch = useDispatch();
   const checkItemRef = useRef("");
+  const handleClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(deleteCheckList(checkList.id));
+  };
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (checkItemRef.current.value?.length > 0) {
+      dispatch(
+        postCheckItem({
+          name: checkItemRef.current.value,
+          checkListId: checkList.id,
+        })
+      );
+      checkItemRef.current.value = "";
+    }
+  }
 
   return (
     <Card
@@ -27,11 +47,7 @@ const TrelloCardChecklist = ({ checkList, cardId }) => {
         Checklist name: {checkList.name}
         <AiFillDelete
           className="fs-4 text-secondary delHoverCheck"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            dispatch(deleteCheckList(checkList.id))
-          }}
+          onClick={handleClick}
         />
       </Card.Header>
       <Card.Body className="d-flex justify-content-start align-items-start bg-black text-light flex-column">
@@ -48,15 +64,7 @@ const TrelloCardChecklist = ({ checkList, cardId }) => {
           <form
               className="d-flex w-100"
               id="checkItemForm"
-              onSubmit={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                if(checkItemRef.current.value?.length > 0){
-                  dispatch(postCheckItem({name: checkItemRef.current.value, checkListId: checkList.id}));
-                  checkItemRef.current.value = "";
-                }
-                
-              }}
+              onSubmit={(e) => handleSubmit(e)}
             >
                 <InputGroup className="d-flex  pt-3" size="sm">
             <InputGroup.Text id="inputGroup-sizing-small" className="bg-dark">

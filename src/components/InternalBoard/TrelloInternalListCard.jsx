@@ -14,6 +14,21 @@ const TrelloInternalListCard = ({ list }) => {
   const addCardRef = useRef("");
   const dispatch = useDispatch();
 
+  const handleClick = (e) =>{
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(deleteList(list.id));
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (addCardRef.current.value?.length > 0) {
+      dispatch(addCard({ listId: list.id, name: addCardRef.current.value }));
+      addCardRef.current.value = "";
+    }
+  }
+
   return (
     <Card
       style={{ height: "20%", minWidth: "20rem", width: "20rem" }}
@@ -23,11 +38,7 @@ const TrelloInternalListCard = ({ list }) => {
         <Card.Title className="d-flex justify-content-between align-items-center">
           {list.name}{" "}
           <div
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              dispatch(deleteList(list.id));
-            }}
+            onClick={(e) => handleClick(e)}
           >
             <MdFolderDelete className="fs-2 delHover" />
           </div>
@@ -42,17 +53,7 @@ const TrelloInternalListCard = ({ list }) => {
         <InputGroup className="d-flex flex-column gap-3">
           <form
             className="d-flex flex-column gap-3"
-            onSubmit={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              if(addCardRef.current.value?.length > 0){
-                dispatch(
-                  addCard({ listId: list.id, name: addCardRef.current.value })
-                );
-                addCardRef.current.value = "";
-              }
-              
-            }}
+            onSubmit={(e) => handleSubmit(e)}
           >
             <InputGroup className="d-flex" size="sm">
               <InputGroup.Text

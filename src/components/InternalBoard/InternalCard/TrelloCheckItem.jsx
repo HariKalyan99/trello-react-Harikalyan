@@ -22,6 +22,16 @@ const TrelloCheckItem = ({ checkItem, checkList, cardId }) => {
     );
   };
 
+  const handleClick  = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(
+      deleteCheckItem({
+        idCheckItem: checkItem.id,
+        checkListId: checkList.id,
+      })
+    );
+  }
 
   
  
@@ -45,16 +55,7 @@ const TrelloCheckItem = ({ checkItem, checkList, cardId }) => {
       <RxCross2
         size={18}
         className="delHover text-secondary"
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          dispatch(
-            deleteCheckItem({
-              idCheckItem: checkItem.id,
-              checkListId: checkList.id,
-            })
-          );
-        }}
+        onClick={(e) => handleClick(e)}
       />
       
     </div>

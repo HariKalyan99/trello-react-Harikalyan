@@ -15,27 +15,31 @@ const TrelloListCard = ({ card, listId }) => {
   };
   const handleShow = () => setShow(true);
   const dispatch = useDispatch();
+  const handleClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    handleShow();
+    dispatch(getCardCheckList(card.id));
+  }
+
+
+  const handleDelete = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(deleteCard({ cardId: card.id, listId }));
+  }
 
   return (
     <>
       <ListGroup.Item
         className="bg-dark text-light d-flex justify-content-between align-items-center listCardHover"
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          handleShow();
-          dispatch(getCardCheckList(card.id));
-        }}
+        onClick={(e) => handleClick(e)}
       >
         {card.name}
         <div>
           <TiDeleteOutline
             className="fs-2 delHover"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              dispatch(deleteCard({ cardId: card.id, listId }));
-            }}
+            onClick={(e) => handleDelete(e)}
           />
         </div>
       </ListGroup.Item>

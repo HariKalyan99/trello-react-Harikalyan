@@ -29,6 +29,20 @@ const TrelloListCardModal = ({ handleClose, show }) => {
     deleteCheckItemPending,
   } = useSelector((state) => state.checklist);
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (checkListRef.current.value?.length > 0) {
+      dispatch(
+        postCheckList({
+          name: checkListRef.current.value,
+          cardId: card.id,
+        })
+      );
+      checkListRef.current.value = "";
+    }
+  }
+
   return (
     <Modal
       show={show}
@@ -106,19 +120,7 @@ const TrelloListCardModal = ({ handleClose, show }) => {
         <InputGroup className="d-flex flex-column gap-3">
           <form
             className="d-flex gap-3"
-            onSubmit={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              if (checkListRef.current.value?.length > 0) {
-                dispatch(
-                  postCheckList({
-                    name: checkListRef.current.value,
-                    cardId: card.id,
-                  })
-                );
-                checkListRef.current.value = "";
-              }
-            }}
+            onSubmit={(e) => handleSubmit(e)}
           >
             <InputGroup className="d-flex" size="sm">
               <InputGroup.Text
