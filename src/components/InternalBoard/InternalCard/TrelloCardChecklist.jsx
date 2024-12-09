@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { Button, Card, Form, InputGroup, ProgressBar } from "react-bootstrap";
 import { FaListCheck } from "react-icons/fa6";
 import { FaCheck } from "react-icons/fa";

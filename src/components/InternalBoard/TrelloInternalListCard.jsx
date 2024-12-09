@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { Button, Card, Form, InputGroup, ListGroup } from "react-bootstrap";
 import { MdFolderDelete } from "react-icons/md";
 import { useDispatch } from "react-redux";
@@ -9,8 +9,7 @@ import {
 import TrelloListCard from "./TrelloListCard";
 import { MdLibraryAdd } from "react-icons/md";
 
-let APIKey = import.meta.env.VITE_APIKEY;
-let APIToken = import.meta.env.VITE_APITOKEN;
+
 const TrelloInternalListCard = ({ list }) => {
   const addCardRef = useRef("");
   const dispatch = useDispatch();
